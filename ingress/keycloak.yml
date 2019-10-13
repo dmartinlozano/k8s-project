@@ -4,14 +4,15 @@ metadata:
   name: keycloak
   namespace: k8s-project
   annotations:
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: k8s-project-ingress
     nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
   - http:
       paths:
-      - path: /keycloak-http
+      #- path: /keycloak/?(.*)
+      - path: /auth
         backend:
-          serviceName: keycloak
-          servicePort: 8080
+          serviceName: keycloak-http
+          servicePort: 80

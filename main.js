@@ -23,9 +23,8 @@ async function createWindow(){
     loading.loadURL("file://"+__dirname+"/assets/loading.gif");
     loading.show();
     exec('chmod +x ./back/init.sh && sh -c "./back/init.sh"', (err, stdout, stderr) => {
-        console.error("err:" +err);
-        console.error(stdout);
-        console.error(stderr);
+        console.error("Stdout to init:" +stdout);
+        console.error("Stderr to init:" +stderr);
         if (err !== null){
             if (err.code === 1){
                 dialog.showErrorBox("Error", "The file .kube/config not found in home directory");
@@ -76,13 +75,12 @@ app.on("activate", function () {
 });
 
 //Checking configuration
-ipcMain.on('check-configuration-on', async (event, arg) => {
-    exec('./back/init.sh', (err, stdout, stderr) => {
-        console.error("err:");
-        console.error(err);
-        console.error("stdout:");
-        console.error(stdout);
-        console.error("stderr:");
-        console.error(stderr);
-      });
+ipcMain.on('get-ingress-ip-on', async (event, arg) => {
+    exec("kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}'", (err, stdout, stderr) => {
+        if (err) {
+            event.sender.send("error", err);  
+          return;
+        }
+        event.sender.send("get-ingress-ip-success", stdout.trim());
+    });
 });

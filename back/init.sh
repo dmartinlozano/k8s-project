@@ -33,15 +33,14 @@ if test `echo $?` -ne 0; then
     exit 2
 fi
 
-kubectl create namespace k8s-project || true
+kubectl create namespace k8s-project
 
 #Configure tiller
-kubectl --namespace kube-system create sa tiller || true
-kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller || true
+kubectl --namespace kube-system create sa tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 
 #Install helm
 IS_MINIKUBE=$(kubectl config view -o jsonpath='{.users[?(@.name == "minikube")].name}')
-if test `$IS_MINIKUBE`
 
 if test -z "$IS_MINIKUBE";then
     #k8s
@@ -56,13 +55,13 @@ kubectl get secret k8s-project --namespace k8s-project
 if test `echo $?` -ne 0
 then
     ROOT_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32)
-    kubectl create secret generic k8s-project --namespace k8s-project --from-literal=root-password='$ROOT_PASSWORD'
+    kubectl create secret generic k8s-project --namespace k8s-project --from-literal=root-password=${ROOT_PASSWORD}
 fi
 
 #Install custom ingress
 if test -z "$IS_MINIKUBE";then
     #k8s
-    helm install --name k8s-project-ingress stable/nginx-ingress --namespace k8s-project --set controller.ingressClass="k8s-project-ingress" ||true
+    helm install --name k8s-project-ingress stable/nginx-ingress --namespace k8s-project --set controller.ingressClass="k8s-project-ingress"
 else
     #minikube
     minikube addons enable ingress
@@ -70,7 +69,9 @@ fi
 
 #Install keycloak
 ROOT_PASSWORD=$(kubectl get secret k8s-project --namespace k8s-project -o json|jq '.data["root-password"]'|sed 's/\"//g'|base64 -d)
-helm install stable/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password="$ROOT_PASSWORD" ||true
+helm repo add codecentric https://codecentric.github.io/helm-charts
+helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password=${ROOT_PASSWORD}
+kubectl apply -f ./ingress/keycloak.yml
 
 
 echo "Done initial configuration"
