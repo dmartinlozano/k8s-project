@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>k8s project</title>
+
+        <link rel="stylesheet" href="../assets/sidebar.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.js"></script>
+
+        <script type="text/javascript">
+            window.$ = window.jQuery = require('jquery');
+            function goto(tool){
+                document.getElementById('tool-page').setAttribute("src", "http://"+ingressIp+"/"+tool);
+            }
+            
+            /*$(document).ready(function () {
+                $('#sidebar').load('menu_left.html'); 
+            });*/
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>k8s project</h3>
+                </div>
+                <ul class="list-unstyled components" id="software-list">
+                    <li onclick="goto('keycloak')"><a href="#"><i class="fas fa-users"></i>&nbsp;GitBucket</a></li>
+                </ul>
+            </nav>
+            <div id="main">
+                <div class="inner">
+                    <section id="banner">
+                        <div class="content">
+                            <webview id="tool-page" src="welcome.html" style="background-color: white; position: absolute; top: 0;  left: 250px;  width: 100%;  height: 100%;  display: inline-flex !important;"></webview>
+                        </div>
+                    </section>	
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

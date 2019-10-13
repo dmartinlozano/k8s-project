@@ -1,0 +1,14 @@
+{
+  "name": "k8s-project",
+  "version": "0.1.0",
+  "main": "./main.js",
+  "license": "MIT",
+  "dependencies": {
+    "electron-dl": "1.14.0",
+    "electron-progressbar": "1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron ."
+  }
+}
