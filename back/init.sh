@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "Checking initial configuration"
 
 #Check if directory work exists
 test ! -d "$HOME/.k8s-project" && mkdir -p "$HOME/.k8s-project"
@@ -67,11 +66,19 @@ else
     minikube addons enable ingress
 fi
 
-#Install keycloak
-ROOT_PASSWORD=$(kubectl get secret k8s-project --namespace k8s-project -o json|jq '.data["root-password"]'|sed 's/\"//g'|base64 -d)
+#Prepare repo for keycloak
 helm repo add codecentric https://codecentric.github.io/helm-charts
-helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password=${ROOT_PASSWORD}
 kubectl apply -f ./ingress/keycloak.yml
 
+EXISTS_KEYCLOAK=$(helm ls --namespace k8s-project|grep keycloak|wc -l)
+if test $EXISTS_KEYCLOAK -eq 0;then
+    exit 3
+fi
 
-echo "Done initial configuration"
+exit 0
+
+#Install keycloak
+#ROOT_PASSWORD=$(kubectl get secret k8s-project --namespace k8s-project -o json|jq '.data["root-password"]'|sed 's/\"//g'|base64 -d)
+#helm repo add codecentric https://codecentric.github.io/helm-charts
+#helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password=${ROOT_PASSWORD}
+#kubectl apply -f ./ingress/keycloak.yml

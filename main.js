@@ -1,31 +1,52 @@
 const {app, dialog, BrowserWindow, ipcMain} = require("electron");
 const exec = require('child_process').exec;
+var main, root, loading;
 
-// async function createWindow(){
-//     win = new BrowserWindow({
-//         width: 1024, 
-//         height: 768,
-//         webPreferences: {nodeIntegration: true, webviewTag: true}
-//         //icon: `file://${_dirname}/dist/assets/logo.png`
-//     });
-//     win.loadURL("file://"+__dirname+"/front/init.html");
-//     win.webContents.openDevTools()
-//     //win.setMenuBarVisibility(false);
-//     win.maximize();
-//     win.on("closed", function(){
-//         win = null;
-//     });
-// };
+function openMainWindow(){
+    main = new BrowserWindow({
+        width: 1024, 
+        height: 768,
+        webPreferences: {nodeIntegration: true, webviewTag: true}
+        //icon: `file://${_dirname}/dist/assets/logo.png`
+    });
+    main.loadURL("file://"+__dirname+"/front/dashboard.html");
+    main.webContents.openDevTools()
+    //main.setMenuBarVisibility(false);
+    main.maximize();
+    main.on("closed", function(){
+        main = null;
+    });
+    main.show();
+    if (root !== undefined){
+        root.hide();
+        root.destroy();
+    }
+    if (loading !== undefined){
+        loading.destroy();
+    }
+}
 
-async function createWindow(){
-    let main = null
-    let loading = new BrowserWindow({show: false, frame: false, width: 441, height: 291});
+function openRootModal(root){
+    root = new BrowserWindow({show: false, frame: false, width: 480, height: 370, webPreferences: {nodeIntegration: true, webviewTag: true}});
+    root.loadURL("file://"+__dirname+"/front/root_password.html");
+    root.on("closed", function(){
+        root = null;
+    });
+    root.show();
+}
+
+
+async function openLoadingWindow(){
+    loading = new BrowserWindow({show: false, frame: false, width: 441, height: 291});
     loading.loadURL("file://"+__dirname+"/assets/loading.gif");
     loading.show();
     exec('chmod +x ./back/init.sh && sh -c "./back/init.sh"', (err, stdout, stderr) => {
         console.error("Stdout to init:" +stdout);
         console.error("Stderr to init:" +stderr);
-        if (err !== null){
+        console.error("Error: "+err);
+        if (err === null){
+            openMainWindow();
+        }else{
             if (err.code === 1){
                 dialog.showErrorBox("Error", "The file .kube/config not found in home directory");
                 app.quit();
@@ -36,28 +57,17 @@ async function createWindow(){
                 app.quit();
                 return;
             }
-        }   
-        main = new BrowserWindow({
-            width: 1024, 
-            height: 768,
-            webPreferences: {nodeIntegration: true, webviewTag: true}
-            //icon: `file://${_dirname}/dist/assets/logo.png`
-        });
-        main.loadURL("file://"+__dirname+"/front/dashboard.html");
-        main.webContents.openDevTools()
-        //main.setMenuBarVisibility(false);
-        main.maximize();
-        main.on("closed", function(){
-            main = null;
-        });
-        main.show()
-        loading.hide()
-        loading.close()
+            if (err.code === 3){
+                openRootModal(root);
+                loading.hide();
+                loading.destroy();
+            }
+        }       
     });
 }
 
 
-app.on("ready", createWindow);
+app.on("ready", openLoadingWindow);
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -68,9 +78,8 @@ app.on("window-all-closed", function () {
 });
 
 app.on("activate", function () {
-    // macOS specific close process
     if (win === null) {
-        createWindow();
+        openLoadingWindow();
     }
 });
 
@@ -82,5 +91,20 @@ ipcMain.on('get-ingress-ip-on', async (event, arg) => {
           return;
         }
         event.sender.send("get-ingress-ip-success", stdout.trim());
+    });
+});
+
+//install keycloak with an password
+ipcMain.on('set-root-password-on', async (event, credentials) => {
+    console.log("Install keycloak with credentials: "+credentials.username+", "+credentials.password)
+    exec('helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username="'+credentials.username+'" --set keycloak.password="'+credentials.password+'"', (err, stdout, stderr) => {
+        console.error(err);
+        console.error(stdout);
+        console.error(stderr);
+        if (err) {
+            event.sender.send("error", err);  
+          return;
+        }
+        openMainWindow();
     });
 });
