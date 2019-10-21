@@ -1,6 +1,7 @@
 const {app, dialog, BrowserWindow, ipcMain} = require("electron");
 const exec = require('child_process').exec;
 var main, root, loading;
+require('./back/menu_top');
 
 function openMainWindow(){
     main = new BrowserWindow({
