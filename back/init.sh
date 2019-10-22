@@ -70,11 +70,6 @@ fi
 helm repo add codecentric https://codecentric.github.io/helm-charts
 kubectl apply -f ./ingress/keycloak.yml
 
-EXISTS_KEYCLOAK=$(helm ls --namespace k8s-project|grep keycloak|wc -l)
-if test $EXISTS_KEYCLOAK -eq 0;then
-    exit 3
-fi
-
 exit 0
 
 #Install keycloak
