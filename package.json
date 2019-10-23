@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "main": "./back/main.js",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "start": "ng build && electron ."
   },
   "private": true,
   "dependencies": {

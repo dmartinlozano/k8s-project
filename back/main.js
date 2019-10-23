@@ -1,6 +1,6 @@
 const {app, dialog, BrowserWindow, ipcMain} = require("electron");
 const exec = require('child_process').exec;
-var main, root, loading;
+var main, loading;
 
 function openMainWindow(){
     main = new BrowserWindow({
@@ -9,7 +9,7 @@ function openMainWindow(){
         webPreferences: {nodeIntegration: true, webviewTag: true}
         //icon: `file://${_dirname}/dist/assets/logo.png`
     });
-    main.loadURL("file://"+__dirname+"/front/dashboard.html");
+    main.loadURL("file://"+__dirname+"/../dist/index.html");
     main.webContents.openDevTools()
     main.setMenuBarVisibility(false);
     main.maximize();
@@ -17,28 +17,15 @@ function openMainWindow(){
         main = null;
     });
     main.show();
-    if (root !== undefined){
-        root.hide();
-        root.destroy();
-    }
     if (loading !== undefined){
         loading.destroy();
     }
 }
 
-function openRootModal(root){
-    root = new BrowserWindow({show: false, frame: false, width: 480, height: 370, webPreferences: {nodeIntegration: true, webviewTag: true}});
-    root.loadURL("file://"+__dirname+"/front/root_password.html");
-    root.on("closed", function(){
-        root = null;
-    });
-    root.show();
-}
-
 
 async function openLoadingWindow(){
-    loading = new BrowserWindow({show: false, frame: false, width: 441, height: 291});
-    loading.loadURL("file://"+__dirname+"/assets/loading.gif");
+    loading = new BrowserWindow({show: false, frame: false, width: 480, height: 270});
+    loading.loadURL("file://"+__dirname+"/../dist/assets/loading.gif");
     loading.show();
     exec('chmod +x ./back/init.sh && sh -c "./back/init.sh"', (err, stdout, stderr) => {
         console.error("Stdout to init:" +stdout);
@@ -56,11 +43,6 @@ async function openLoadingWindow(){
                 dialog.showErrorBox("Error", "Unable to access kubernetes");
                 app.quit();
                 return;
-            }
-            if (err.code === 3){
-                openRootModal(root);
-                loading.hide();
-                loading.destroy();
             }
         }       
     });

@@ -13,7 +13,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatListModule } from '@angular/material/list'
 
 
 @NgModule({
@@ -29,6 +33,10 @@ import { MatButtonModule} from '@angular/material/button';
     MatProgressSpinnerModule,
     MatInputModule,
     MatButtonModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,

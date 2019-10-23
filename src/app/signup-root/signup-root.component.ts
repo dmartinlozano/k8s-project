@@ -31,7 +31,7 @@ export class SignupRootComponent implements OnInit {
         });
       let keycloakIsInstalled: boolean = await this.signupRootService.checkIfKeyCloakIsInstalled();
       if (keycloakIsInstalled === true) {
-        //this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/login');
       }
     } catch (err) {
       console.error(err);

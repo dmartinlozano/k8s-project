@@ -1,1 +1,31 @@
-<p>dashboard works!</p>
+<mat-sidenav-container fullscreen>
+    <mat-sidenav mode="side" #sidenav opened position="start">
+        <mat-nav-list>
+            <a mat-list-item (click)="goto('keycloak')">Keycloak (Users)</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <button mat-icon-button aria-label="Example icon-button with a heart icon" style="color: white" (click)="sidenav.toggle()">
+                <i class="fas fa-bars"></i>&nbsp;
+            </button>
+            <button mat-button [matMenuTriggerFor]="softwareMenu">Software</button>
+            <mat-menu #softwareMenu="matMenu">
+                <button mat-menu-item>Manage software</button>
+                <button mat-menu-item>Manage projects</button>
+                <button mat-menu-item>Manage users</button>
+                <button mat-menu-item>Manage permissions</button>
+            </mat-menu>
+            <span class="toolbar-spacer"></span>
+            <button mat-button [matMenuTriggerFor]="profileMenu">Profile</button>
+            <mat-menu #profileMenu="matMenu" xPosition="before">
+                <button mat-menu-item>View profile</button>
+                <button mat-menu-item>Logut</button>
+            </mat-menu>
+        </mat-toolbar>
+        <div class="main-content">
+            <object #mainContent class="content" type="text/html" data="./assets/welcome.html"></object>
+        </div>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,28 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+mat-sidenav {
+    width: 280px;
+    padding:15px;
+}
+.mat-drawer { 
+    background-color: #023075;
+    color:#fff
+}
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.fa-bars {
+  color: white;
+}
+
+.mat-list-item{
+    color: white !important;
+}
+.main-content{
+    height: 89%;
+}
+.content{
+    width: 99.9%;
+    height: 100%;
+    overflow: auto;
+}
