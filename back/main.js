@@ -1,7 +1,6 @@
 const {app, dialog, BrowserWindow, ipcMain} = require("electron");
 const exec = require('child_process').exec;
 var main, root, loading;
-require('./back/menu_top');
 
 function openMainWindow(){
     main = new BrowserWindow({
@@ -12,7 +11,7 @@ function openMainWindow(){
     });
     main.loadURL("file://"+__dirname+"/front/dashboard.html");
     main.webContents.openDevTools()
-    //main.setMenuBarVisibility(false);
+    main.setMenuBarVisibility(false);
     main.maximize();
     main.on("closed", function(){
         main = null;
