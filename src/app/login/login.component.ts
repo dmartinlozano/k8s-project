@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { SignupRootService } from '../signup-root/signup-root.service';
+import { ElectronService } from '../_helpers/electron.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   showSpinner = false;
   @Input() error: string | null;
 
-  constructor(private router: Router, private signupRootService: SignupRootService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private electronService: ElectronService, private formBuilder: FormBuilder) { }
   get f() { return this.loginForm.controls; }
 
   ngOnInit() {

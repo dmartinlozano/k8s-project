@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ElectronService } from '../_helpers/electron.service';
 declare var $: any;
 
 @Component({
@@ -9,14 +10,20 @@ declare var $: any;
 export class DashboardComponent implements OnInit {
 
   @ViewChild('mainContent', {static: false}) mainContent: ElementRef;
+  ingressIp: string;
 
-  constructor() { }
+  constructor(private electronService: ElectronService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.ingressIp = await this.electronService.getIngressIp();
   }
 
   goto(tool:string){
-    $("#mainContent").setAttribute("data", "http://40.87.141.55/auth/admin")
+    switch (tool) {
+      case 'keycloak':
+        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/auth/admin');
+        break;
+    }
   }
 
 }

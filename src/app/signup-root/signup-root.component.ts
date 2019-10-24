@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SignupRootService } from './signup-root.service';
+import { ElectronService } from '../_helpers/electron.service';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { MustMatch } from '../_helpers/must-match.validator';
 
@@ -17,7 +17,7 @@ export class SignupRootComponent implements OnInit {
   signForm: FormGroup;
   signFormSubmitted = false;
 
-  constructor(private router: Router, private signupRootService: SignupRootService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private electronService: ElectronService, private formBuilder: FormBuilder) { }
   get f() { return this.signForm.controls; }
 
   async ngOnInit() {
@@ -29,7 +29,7 @@ export class SignupRootComponent implements OnInit {
       }, {
             validator: MustMatch('password', 'verifyPassword')
         });
-      let keycloakIsInstalled: boolean = await this.signupRootService.checkIfKeyCloakIsInstalled();
+      let keycloakIsInstalled: boolean = await this.electronService.checkIfKeyCloakIsInstalled();
       if (keycloakIsInstalled === true) {
         this.router.navigateByUrl('/login');
       }
@@ -38,12 +38,17 @@ export class SignupRootComponent implements OnInit {
     }
   }
 
-  signup() {
+  async signup() {
     this.signFormSubmitted = true;
     if (this.signForm.invalid) {
       return;
     }
-    this.router.navigateByUrl('dashboard');
+    try{
+      await this.electronService.installKeycloak();
+      this.router.navigateByUrl('dashboard');
+     } catch (err) {
+      console.error(err);
+    } 
   }
 
 }

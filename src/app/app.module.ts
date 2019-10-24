@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
+import { WebviewDirective } from './_helpers/webview.directive';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignupRootComponent } from './signup-root/signup-root.component';
@@ -22,6 +24,7 @@ import { MatListModule } from '@angular/material/list'
 
 @NgModule({
   declarations: [
+    WebviewDirective,
     AppComponent,
     SignupRootComponent,
     LoginComponent,
