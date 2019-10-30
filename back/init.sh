@@ -70,10 +70,15 @@ fi
 helm repo add codecentric https://codecentric.github.io/helm-charts
 kubectl apply -f ./ingress/keycloak.yml
 
+KEYCLOAK_INSTALLED=$(helm ls --namespace k8s-project|grep keycloak|wc -l)
+if test $KEYCLOAK_INSTALLED -eq 0
+then
+    exit 3
+fi
+
 exit 0
 
 #Install keycloak
-#ROOT_PASSWORD=$(kubectl get secret k8s-project --namespace k8s-project -o json|jq '.data["root-password"]'|sed 's/\"//g'|base64 -d)
 #helm repo add codecentric https://codecentric.github.io/helm-charts
 #helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password=${ROOT_PASSWORD}
 #kubectl apply -f ./ingress/keycloak.yml

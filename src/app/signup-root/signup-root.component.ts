@@ -29,10 +29,6 @@ export class SignupRootComponent implements OnInit {
       }, {
             validator: MustMatch('password', 'verifyPassword')
         });
-      let keycloakIsInstalled: boolean = await this.electronService.checkIfKeyCloakIsInstalled();
-      if (keycloakIsInstalled === true) {
-        this.router.navigateByUrl('/login');
-      }
     } catch (err) {
       console.error(err);
     }

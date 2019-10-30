@@ -28,20 +28,6 @@ export class ElectronService {
         }
     }
 
-    checkIfKeyCloakIsInstalled(): Promise<boolean> {
-        var _this = this;
-        if (_this._ipc) {
-            return new Promise(function (resolve) {
-                _this._ipc.send("is-keycloak-installed-on");
-                _this._ipc.on("is-keycloak-installed-success", (event, isInstalled) => {
-                    return resolve(isInstalled);
-                });
-            });
-        }else{
-            throw new Error("Error checking if keycloack is installed");
-        }
-    }
-
     installKeycloak(): Promise<any>{
         var _this = this;
         if (_this._ipc) {

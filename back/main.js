@@ -2,14 +2,15 @@ const {app, dialog, BrowserWindow, ipcMain} = require("electron");
 const exec = require('child_process').exec;
 var main, loading;
 
-function openMainWindow(){
+function openMainWindow(installKeyCloak){
     main = new BrowserWindow({
         width: 1024, 
         height: 768,
-        webPreferences: {nodeIntegration: true, webviewTag: true}
+        nodeIntegration: "iframe",
+        webPreferences: {nodeIntegration: true, webviewTag: true, webSecurity: false}
         //icon: `file://${_dirname}/dist/assets/logo.png`
     });
-    main.loadURL("file://"+__dirname+"/../dist/index.html");
+    main.loadURL("file://"+__dirname+"/../dist/index.html?installKeyCloak="+installKeyCloak);
     main.webContents.openDevTools()
     main.setMenuBarVisibility(false);
     main.maximize();
@@ -32,7 +33,7 @@ async function openLoadingWindow(){
         console.error("Stderr to init:" +stderr);
         console.error("Error: "+err);
         if (err === null){
-            openMainWindow();
+            openMainWindow(false);
         }else{
             if (err.code === 1){
                 dialog.showErrorBox("Error", "The file .kube/config not found in home directory");
@@ -43,6 +44,10 @@ async function openLoadingWindow(){
                 dialog.showErrorBox("Error", "Unable to access kubernetes");
                 app.quit();
                 return;
+            }
+            if (err.code === 3){
+                console.log("Keycloak is not installed");
+                openMainWindow(true);
             }
         }       
     });
@@ -76,17 +81,14 @@ ipcMain.on('get-ingress-ip-on', async (event, arg) => {
     });
 });
 
-//install keycloak with an password
-ipcMain.on('set-root-password-on', async (event, credentials) => {
+//install keycloak with a password
+ipcMain.on('keycloak-install-on', async (event, credentials) => {
     console.log("Install keycloak with credentials: "+credentials.username+", "+credentials.password)
     exec('helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username="'+credentials.username+'" --set keycloak.password="'+credentials.password+'"', (err, stdout, stderr) => {
-        console.error(err);
-        console.error(stdout);
-        console.error(stderr);
         if (err) {
             event.sender.send("error", err);  
           return;
         }
-        openMainWindow();
+        event.sender.send("keycloak-install-success", null);
     });
 });
