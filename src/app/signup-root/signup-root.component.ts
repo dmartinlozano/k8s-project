@@ -20,7 +20,7 @@ export class SignupRootComponent implements OnInit {
   constructor(private router: Router, private electronService: ElectronService, private formBuilder: FormBuilder) { }
   get f() { return this.signForm.controls; }
 
-  async ngOnInit() {
+  ngOnInit() {
     try {
       this.signForm = this.formBuilder.group({
         username: ['', [Validators.required]],
@@ -40,7 +40,7 @@ export class SignupRootComponent implements OnInit {
       return;
     }
     try{
-      await this.electronService.installKeycloak();
+      this.electronService.installKeycloak();
       this.router.navigateByUrl('dashboard');
      } catch (err) {
       console.error(err);

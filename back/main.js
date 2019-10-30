@@ -82,7 +82,8 @@ ipcMain.on('get-ingress-ip-on', async (event, arg) => {
 });
 
 //install keycloak with a password
-ipcMain.on('keycloak-install-on', async (event, credentials) => {
+//https://github.com/electron/electron/blob/master/docs/api/ipc-main.md
+ipcMain.handle('keycloak-install', async (event, credentials) => {
     console.log("Install keycloak with credentials: "+credentials.username+", "+credentials.password)
     exec('helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username="'+credentials.username+'" --set keycloak.password="'+credentials.password+'"', (err, stdout, stderr) => {
         if (err) {
