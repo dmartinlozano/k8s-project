@@ -10,6 +10,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script>
       let installKeyCloak = window.process.argv.find(s => s.includes('installKeyCloak'));
+      window.home = window.process.env.HOME;
       if (installKeyCloak !== undefined){
         window.installKeyCloak = installKeyCloak.split("=")[1];
       }

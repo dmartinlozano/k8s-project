@@ -1,5 +1,6 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const exec = require('child_process').exec;
+const fs = require('fs');
 var main, loading;
 
 function openMainWindow(installKeyCloak) {
@@ -70,6 +71,8 @@ app.on("activate", function () {
     }
 });
 
+
+
 function execCommand(cmd) {
     return new Promise((resolve, reject) => {
         exec(cmd, (error, stdout, stderr) => {
@@ -82,6 +85,11 @@ function execCommand(cmd) {
 //Checking configuration : async
 ipcMain.handle('get-ingress-ip', async (event, arg) => {
     return await execCommand("kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}'");
+});
+
+//Get config
+ipcMain.handle("get-config", async(event, args)=>{
+    return fs.readFileSync(process.env.HOME+'/.k8s-project/config');
 });
 
 //install keycloak

@@ -5,6 +5,7 @@ import { IpcRenderer } from 'electron';
     providedIn: 'root'
 })
 export class ElectronService {
+  
     private _ipc: IpcRenderer | undefined;
 
     constructor() {

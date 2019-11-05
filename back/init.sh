@@ -76,6 +76,15 @@ then
     exit 3
 fi
 
+#store k8s info
+INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+
+cat <<EOF > $HOME/.k8s-project/config
+{
+  "ingressIp": "$INGRESS_IP"
+}
+EOF
+
 exit 0
 
 #Install keycloak
