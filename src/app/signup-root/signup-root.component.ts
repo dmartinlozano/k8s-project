@@ -11,9 +11,6 @@ import { MustMatch } from '../_helpers/must-match.validator';
 })
 export class SignupRootComponent implements OnInit {
 
-  //MORE INFO: 
-  //https://itnext.io/materror-cross-field-validators-in-angular-material-7-97053b2ed0cf
-
   signForm: FormGroup;
   signFormSubmitted = false;
 
@@ -40,7 +37,7 @@ export class SignupRootComponent implements OnInit {
       return;
     }
     try{
-      this.electronService.installKeycloak();
+      this.electronService.installKeycloak(this.signForm.value);
       this.router.navigateByUrl('dashboard');
      } catch (err) {
       console.error(err);

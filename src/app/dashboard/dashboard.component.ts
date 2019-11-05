@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ElectronService } from '../_helpers/electron.service';
+import { Router } from '@angular/router';
 declare var $: any;
 
 @Component({
@@ -12,10 +13,14 @@ export class DashboardComponent implements OnInit {
   @ViewChild('mainContent', {static: false}) mainContent: ElementRef;
   ingressIp: string;
 
-  constructor(private electronService: ElectronService) { }
+  constructor(private router: Router, private electronService: ElectronService) { }
 
   async ngOnInit() {
     this.ingressIp = await this.electronService.getIngressIp();
+  }
+
+  logout() {
+    this.router.navigateByUrl('dashboard');
   }
 
   goto(tool:string){

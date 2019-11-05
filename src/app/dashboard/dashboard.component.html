@@ -20,7 +20,7 @@
             <button mat-button [matMenuTriggerFor]="profileMenu">Profile</button>
             <mat-menu #profileMenu="matMenu" xPosition="before">
                 <button mat-menu-item>View profile</button>
-                <button mat-menu-item>Logut</button>
+                <button mat-menu-item (click)="logout()">Logut</button>
             </mat-menu>
         </mat-toolbar>
         <div class="main-content">

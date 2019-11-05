@@ -20,10 +20,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-        username: ['', [Validators.required]],
-        password: ['', [Validators.required, Validators.pattern("^(?=.*\\d)(?=.*[a-z])|(?=.*[A-Z])$")]],
-      });
-    if (window["installKeyCloak"] === "true"){
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.pattern("^(?=.*\\d)(?=.*[a-z])|(?=.*[A-Z])$")]],
+    });
+
+    if (window["installKeyCloak"] === "true") {
       this.router.navigateByUrl('singup-root');
     }
   }
@@ -33,6 +34,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
+    //https://stackoverflow.com/questions/49572291/keycloak-user-validation-and-getting-token
     this.router.navigateByUrl('dashboard');
   }
 
