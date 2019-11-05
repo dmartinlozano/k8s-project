@@ -23,6 +23,9 @@ export class LoginComponent implements OnInit {
         username: ['', [Validators.required]],
         password: ['', [Validators.required, Validators.pattern("^(?=.*\\d)(?=.*[a-z])|(?=.*[A-Z])$")]],
       });
+    if (window["installKeyCloak"] === "true"){
+      this.router.navigateByUrl('singup-root');
+    }
   }
 
   login() {

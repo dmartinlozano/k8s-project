@@ -7,10 +7,10 @@ function openMainWindow(installKeyCloak){
         width: 1024, 
         height: 768,
         nodeIntegration: "iframe",
-        webPreferences: {nodeIntegration: true, webviewTag: true, webSecurity: false}
+        webPreferences: {nodeIntegration: true, webviewTag: true, webSecurity: false, additionalArguments: ["--installKeyCloak="+installKeyCloak]}
         //icon: `file://${_dirname}/dist/assets/logo.png`
     });
-    main.loadURL("file://"+__dirname+"/../dist/index.html?installKeyCloak="+installKeyCloak);
+    main.loadURL("file://"+__dirname+"/../dist/index.html");
     main.webContents.openDevTools()
     main.setMenuBarVisibility(false);
     main.maximize();
@@ -25,7 +25,7 @@ function openMainWindow(installKeyCloak){
 
 
 async function openLoadingWindow(){
-    loading = new BrowserWindow({show: false, frame: false, width: 480, height: 270});
+    loading = new BrowserWindow({show: false, frame: false, width: 480, height: 270, resizable: false});
     loading.loadURL("file://"+__dirname+"/../dist/assets/loading.gif");
     loading.show();
     exec('chmod +x ./back/init.sh && sh -c "./back/init.sh"', (err, stdout, stderr) => {
