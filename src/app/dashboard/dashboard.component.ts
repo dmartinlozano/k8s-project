@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   }
 
   logout() {
-    this.router.navigateByUrl('dashboard');
+    this.router.navigateByUrl('');
   }
 
   goto(tool:string){
