@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   get f() { return this.loginForm.controls; }
 
   ngOnInit() {
+    localStorage.clear();
     if (window["installKeyCloak"] === "true") {
       this.router.navigateByUrl('singup-root');
     }

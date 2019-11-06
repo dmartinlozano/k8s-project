@@ -82,11 +82,6 @@ function execCommand(cmd) {
     });
 }
 
-//Checking configuration : async
-ipcMain.handle('get-ingress-ip', async (event, arg) => {
-    return await execCommand("kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}'");
-});
-
 //Get config
 ipcMain.handle("get-config", async(event, args)=>{
     return fs.readFileSync(process.env.HOME+'/.k8s-project/config');

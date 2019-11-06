@@ -78,10 +78,12 @@ fi
 
 #store k8s info
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+INSTALLED_TOOLS=$(helm ls --namespace k8s-project --output json)
 
 cat <<EOF > $HOME/.k8s-project/config
 {
-  "ingressIp": "$INGRESS_IP"
+  "ingressIp": "$INGRESS_IP",
+  "installedTools": $INSTALLED_TOOLS
 }
 EOF
 

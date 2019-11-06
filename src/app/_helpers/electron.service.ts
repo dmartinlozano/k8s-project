@@ -14,10 +14,6 @@ export class ElectronService {
         }
     }
 
-    async getIngressIp(): Promise<string>{
-        return await this._ipc.invoke("get-ingress-ip");
-    }
-
     async installKeycloak(credentials): Promise<any>{
         return await this._ipc.invoke("keycloak-install", credentials);
     }
