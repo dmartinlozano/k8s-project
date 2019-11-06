@@ -33,15 +33,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    this.loginService.login(this.loginForm.value).then(
-      (res: any) => {
-        localStorage.setItem("keycloak_token", res.access_token);
-        this.router.navigateByUrl('dashboard');
-      },
-      (error) => {
-        console.error(error);
-        this.error = error.code + ": " + error.message;
-      });
+    try {
+      let res = await this.loginService.login(this.loginForm.value);
+      localStorage.setItem("keycloak_token_info", JSON.stringify(res));
+      this.router.navigateByUrl('dashboard');
+    } catch (error) {
+      console.error(error);
+      this.error = error.code + ": " + error.message;
+    };
   }
-
 }

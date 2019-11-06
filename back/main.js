@@ -8,7 +8,7 @@ function openMainWindow(installKeyCloak) {
         width: 1024,
         height: 768,
         nodeIntegration: "iframe",
-        webPreferences: { nodeIntegration: true, webviewTag: true, webSecurity: false, additionalArguments: ["--installKeyCloak=" + installKeyCloak] }
+        webPreferences: { nodeIntegration: true, webviewTag: true, webSecurity: true, additionalArguments: ["--installKeyCloak=" + installKeyCloak] }
         //icon: `file://${_dirname}/dist/assets/logo.png`
     });
     main.loadURL("file://" + __dirname + "/../dist/index.html");

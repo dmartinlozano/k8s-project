@@ -15,11 +15,6 @@ export class LoginService {
         let loginUrl = "http://"+ingressIp+"/auth/realms/master/protocol/openid-connect/token";
         var body = 'username=' + credentials.username + '&password=' + credentials.password + "&client_id=admin-cli&grant_type=password";
         const headers = new HttpHeaders().set("Content-Type", "application/x-www-form-urlencoded");
-        return this.http.post(loginUrl, body, {headers}).toPromise().then((res: any) => {
-            let body = res.json();
-            return body || {};
-        }).catch((error) => {
-            return Promise.reject(error);
-        });
+        return await this.http.post(loginUrl, body, {headers, withCredentials: true}).toPromise();
     }
-}
+}   
