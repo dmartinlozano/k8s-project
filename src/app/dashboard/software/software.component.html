@@ -1,8 +1,17 @@
-<h1 mat-dialog-title>Software</h1>
+<h1 mat-dialog-title>Select the software to install/uninstall</h1>
 <div mat-dialog-content>
-  <p>Select the software to install/uninstall:</p>
+  <mat-card>
+    <mat-card-content  *ngFor="let item of availableSoftware">
+      <section>
+        <mat-slide-toggle color="primary" [checked]="checked"  [disabled]="disabled"> Slide me!</mat-slide-toggle>
+      </section>
+      <section>
+        <mat-slide-toggle color="primary" [checked]="checked"  [disabled]="disabled"> Slide me!</mat-slide-toggle>
+      </section>
+    </mat-card-content>
+  </mat-card>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="close()">Cancel</button>
-  <button mat-button (click)="install()">Ok</button>
+  <button mat-button (click)="install()" color="primary">Ok</button>
 </div>

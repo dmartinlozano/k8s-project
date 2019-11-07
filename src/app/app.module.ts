@@ -22,6 +22,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SoftwareComponent } from './dashboard/software/software.component';
 
@@ -47,6 +48,7 @@ import { SoftwareComponent } from './dashboard/software/software.component';
     MatToolbarModule,
     MatListModule,
     MatDialogModule,
+    MatSlideToggleModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Software } from './software.interface';
 
 @Component({
   selector: 'dashboard-software',
@@ -8,7 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class SoftwareComponent implements OnInit {
 
-  constructor(private dialogRef: MatDialogRef<SoftwareComponent>) { }
+  constructor(private dialogRef: MatDialogRef<SoftwareComponent>, @Inject(MAT_DIALOG_DATA) public availableSoftware: Software) { }
 
   close(): void {
     this.dialogRef.close();
@@ -18,6 +19,7 @@ export class SoftwareComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.availableSoftware);
   }
 
 }

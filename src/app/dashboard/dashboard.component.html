@@ -1,7 +1,7 @@
 <mat-sidenav-container fullscreen>
     <mat-sidenav mode="side" #sidenav opened position="start">
-        <mat-nav-list *ngFor="let item of softwareNames">
-            <a mat-list-item (click)="goto(item)">{{item}}</a>
+        <mat-nav-list *ngFor="let item of availableSoftware">
+            <a mat-list-item (click)="goto(item.id)" *ngIf="item.installed === true">{{item.name}}</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>

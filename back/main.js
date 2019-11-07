@@ -89,6 +89,11 @@ ipcMain.handle("get-config", async(event, args)=>{
 
 //install keycloak
 ipcMain.handle('keycloak-install', async (event, credentials) => {
-    console.error("Install keycloak with credentials: " + credentials.username + ", " + credentials.password);
+    console.log("Install keycloak with credentials: " + credentials.username + ", " + credentials.password);
     return await execCommand('helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username="' + credentials.username + '" --set keycloak.password="' + credentials.password + '"');
+});
+
+//get installed tools
+ipcMain.handle("get-installed-tools", async(event, args)=>{
+    return await execCommand('helm ls --namespace k8s-project --output json');
 });
