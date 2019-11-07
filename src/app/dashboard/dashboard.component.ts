@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '../_helpers/config.service';
+import {MatDialog} from '@angular/material/dialog';
+import {SoftwareComponent} from './software/software.component';
 declare var $: any;
 
 @Component({
@@ -14,7 +16,7 @@ export class DashboardComponent implements OnInit {
   ingressIp: string;
   softwareNames: string[];
 
-  constructor(private router: Router, private configService:ConfigService) { }
+  constructor(private router: Router, private configService:ConfigService, public dialog: MatDialog) { }
 
   async ngOnInit() {
     this.ingressIp = await this.configService.getConfig("ingressIp");
@@ -32,6 +34,10 @@ export class DashboardComponent implements OnInit {
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/auth/admin');
         break;
     }
+  }
+
+  openSoftwareDialog(): void {
+    this.dialog.open(SoftwareComponent, {width: '600px', data: {} });
   }
 
 }

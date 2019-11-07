@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { WebviewDirective } from './_helpers/webview.directive';
 
@@ -20,7 +21,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+
+import { SoftwareComponent } from './dashboard/software/software.component';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +32,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     SignupRootComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    SoftwareComponent
   ],
   imports: [
     HttpClientModule,
@@ -41,6 +46,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
+    MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
@@ -48,6 +54,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ SoftwareComponent, ]
 })
 export class AppModule { }

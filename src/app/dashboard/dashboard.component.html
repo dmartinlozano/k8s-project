@@ -11,7 +11,7 @@
             </button>
             <button mat-button [matMenuTriggerFor]="softwareMenu">Software</button>
             <mat-menu #softwareMenu="matMenu">
-                <button mat-menu-item>Manage software</button>
+                <button mat-menu-item (click)="openSoftwareDialog()">Manage software</button>
                 <button mat-menu-item>Manage projects</button>
                 <button mat-menu-item>Manage users</button>
                 <button mat-menu-item>Manage permissions</button>
