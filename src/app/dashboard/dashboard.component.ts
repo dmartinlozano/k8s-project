@@ -47,11 +47,14 @@ export class DashboardComponent implements OnInit {
       case 'keycloak':
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/auth/admin');
         break;
+      case 'gitbucket':
+        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/gitbucket/signin');
+        break;
     }
   }
 
   openSoftwareDialog(): void {
-    this.dialog.open(SoftwareComponent, {width: '600px', data: {} });
+    this.dialog.open(SoftwareComponent, {width: '600px', data: this.availableSoftware });
   }
 
 }

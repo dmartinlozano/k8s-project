@@ -2,16 +2,66 @@
     "id": "keycloak",
     "name": "Keycloak (Users)",
     "description": "Manage identity and access management.",
-    "installed": false
+    "installed": false,
+    "recommended": true
 },
 {
     "id": "gitbucket",
     "name": "GitBucket (Repositories)",
     "description": "System control versions for git",
     "installed": false,
-    "installation": {
-        "linux": [  "helm repo add int128.github.io https://int128.github.io/helm-charts",
-                    "helm repo update",
-                    "helm install int128.github.io/gitbucket"]
-    }
+    "recommended": true
+},{
+    "id": "jenkins",
+    "name": "Jenkins (CI/CD)",
+    "description": "",
+    "installed": false,
+    "recommended": true
+},{
+    "id": "mkDocs",
+    "name": "mkDocs (Documentation)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "nexus",
+    "name": "Nexus (Artifacts)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "openproject",
+    "name": "Open Project (Agile)",
+    "description": "",
+    "installed": false
+},{
+    "id": "mattermost",
+    "name": "Mattermost (Chat)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "testlink",
+    "name": "Testlink (Test)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "minio",
+    "name": "Minio (Files)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "iRedMail",
+    "name": "iRedMail (Mail)",
+    "description": "",
+    "installed": false,
+    "recommended": false
+},{
+    "id": "bootsnote",
+    "name": "Bootsnote (Notes)",
+    "description": "",
+    "installed": false,
+    "recommended": false
 }]

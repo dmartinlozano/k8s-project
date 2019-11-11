@@ -71,8 +71,6 @@ app.on("activate", function () {
     }
 });
 
-
-
 function execCommand(cmd) {
     return new Promise((resolve, reject) => {
         exec(cmd, (error, stdout, stderr) => {
@@ -96,4 +94,14 @@ ipcMain.handle('keycloak-install', async (event, credentials) => {
 //get installed tools
 ipcMain.handle("get-installed-tools", async(event, args)=>{
     return await execCommand('helm ls --namespace k8s-project --output json');
+});
+
+//install tools
+ipcMain.handle('install-tools', async (event, tools) => {
+    return await execCommand('chmod +x ./back/install_tools.sh && sh -c "./back/install_tools.sh ' + tools + '"');
+});
+
+//uninstall tools
+ipcMain.handle('uninstall-tools', async (event, tools) => {
+    return await execCommand('chmod +x ./back/uninstall_tools.sh && sh -c "./back/uninstall_tools.sh ' + tools + '"');
 });

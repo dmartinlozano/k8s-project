@@ -23,6 +23,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { SoftwareComponent } from './dashboard/software/software.component';
 
@@ -49,6 +51,8 @@ import { SoftwareComponent } from './dashboard/software/software.component';
     MatListModule,
     MatDialogModule,
     MatSlideToggleModule,
+    MatGridListModule,
+    MatProgressBarModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
@@ -57,6 +61,6 @@ import { SoftwareComponent } from './dashboard/software/software.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ SoftwareComponent, ]
+  entryComponents: [SoftwareComponent,]
 })
 export class AppModule { }

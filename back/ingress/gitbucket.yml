@@ -1,17 +1,18 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: keycloak
+  name: gitbucket
   namespace: k8s-project
   annotations:
     kubernetes.io/ingress.class: k8s-project-ingress
     nginx.ingress.kubernetes.io/add-base-url: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
   rules:
   - http:
       paths:
-      - path: /auth
+      - path: /gitbucket/?(.*)
         backend:
-          serviceName: keycloak-http
+          serviceName: gitbucket
           servicePort: 80

@@ -23,4 +23,12 @@ export class ElectronService {
         return JSON.parse(auxS);
     }
 
+    async installTools(toolsToInstall):Promise<any>{
+        return await this._ipc.invoke("install-tools", toolsToInstall);
+    }
+
+    async uninstallTools(toolsToUninstall):Promise<any>{
+        return await this._ipc.invoke("uninstall-tools", toolsToUninstall);
+    }
+
 }
