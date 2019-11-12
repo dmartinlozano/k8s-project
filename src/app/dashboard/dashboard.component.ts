@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/auth/admin');
         break;
       case 'gitbucket':
-        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/gitbucket/signin');
+        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/gitbucket');
         break;
     }
   }
