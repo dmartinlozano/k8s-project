@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { WebviewDirective } from './_helpers/webview.directive';
+import { AuthInterceptor } from './_helpers/auth-interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,6 +28,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { SoftwareComponent } from './dashboard/software/software.component';
+import { CanActivateKeycloak } from './_helpers/can-activate-keycloak';
 
 
 @NgModule({
@@ -59,7 +61,14 @@ import { SoftwareComponent } from './dashboard/software/software.component';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    CanActivateKeycloak,
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [SoftwareComponent,]
 })
