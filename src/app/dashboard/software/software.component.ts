@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Software } from './software.interface';
-import { ElectronService } from 'src/app/_helpers/electron.service';
-import { KeycloakService } from 'src/app/services-tools/keycloak.service';
-import { GitbucketService } from 'src/app/services-tools/gitbucket.service';
+import { KeycloakService } from 'src/app/services/keycloak.service';
+import { GitbucketService } from 'src/app/services/gitbucket.service';
+import { ToolsService } from 'src/app/services/tools.service';
 
 @Component({
   selector: 'dashboard-software',
@@ -16,7 +16,7 @@ export class SoftwareComponent{
   software: Software[];
 
   constructor(
-    private electronService: ElectronService, 
+    private toolsService: ToolsService, 
     private keycloakService: KeycloakService, 
     private gitbucketService: GitbucketService,
     private dialogRef: MatDialogRef<SoftwareComponent>, 
@@ -32,8 +32,8 @@ export class SoftwareComponent{
     this.showSpinner = true;
     let toInstall = this.software.filter(x=>{return x.installed === true}).map(x=>{return x.id});
     let toUninstall = this.software.filter(x=>{return x.installed === false}).map(x=>{return x.id});
-    await this.electronService.installTools(toInstall.join(' '));
-    await this.electronService.uninstallTools(toUninstall.join(' '));
+    await this.toolsService.installTools(toInstall.join(' '));
+    await this.toolsService.uninstallTools(toUninstall.join(' '));
 
     if (toInstall.indexOf("gitbucket")){
       await this.keycloakService.configureGitbucket();

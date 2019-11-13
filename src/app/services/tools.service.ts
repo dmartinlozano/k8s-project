@@ -4,7 +4,7 @@ import { IpcRenderer } from 'electron';
 @Injectable({
     providedIn: 'root'
 })
-export class ElectronService {
+export class ToolsService {
   
     private _ipc: IpcRenderer | undefined;
 
@@ -12,10 +12,6 @@ export class ElectronService {
         if (window.require) {
             this._ipc = window.require('electron').ipcRenderer;
         }
-    }
-
-    async installKeycloak(credentials): Promise<any>{
-        return await this._ipc.invoke("keycloak-install", credentials);
     }
 
     async getInstalledTools(): Promise<any>{

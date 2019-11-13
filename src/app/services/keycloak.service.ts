@@ -1,19 +1,31 @@
 import { Injectable } from '@angular/core'
-import { ConfigService } from '../_helpers/config.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ConfigService } from './config.service';
+import { HttpClient } from '@angular/common/http';
+import { IpcRenderer } from 'electron';
 
 @Injectable({
     providedIn: 'root'
 })
 export class KeycloakService {
 
-    constructor(private configService: ConfigService, private http: HttpClient){}
+    private _ipc: IpcRenderer | undefined;
+
+    constructor(private configService: ConfigService, private http: HttpClient) {
+        if (window.require) {
+            this._ipc = window.require('electron').ipcRenderer;
+        }
+    }
+
     waitUntilToolIsAvailable(tool){
         //TODO
     }
 
     fixEmailForAdmin(sign){
         //TODO
+    }
+
+    async install(credentials): Promise<any>{
+        return await this._ipc.invoke("keycloak-install", credentials);
     }
 
     async configureGitbucket(){

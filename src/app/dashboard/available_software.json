@@ -9,6 +9,7 @@
     "id": "gitbucket",
     "name": "GitBucket (Repositories)",
     "description": "System control versions for git",
+    "version": "4.32.0",
     "installed": false,
     "recommended": true
 },{
