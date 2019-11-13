@@ -35,10 +35,9 @@ export class SoftwareComponent{
     await this.electronService.installTools(toInstall.join(' '));
     await this.electronService.uninstallTools(toUninstall.join(' '));
 
-    //TODO remove: if (toInstall.indexOf("gitbucket")){
+    if (toInstall.indexOf("gitbucket")){
       await this.keycloakService.configureGitbucket();
-      await this.gitbucketService.configureKeyCloak();
-    //}
+    }
     this.dialogRef.close();
   }
 

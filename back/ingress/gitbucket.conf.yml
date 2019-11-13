@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitbucket.conf
+  namespace: k8s-project
+data:
+  gitbucket.conf: |
+    oidc.client_secret=gitbucket
+    oidc.issuer=http\://INGRESS_IP/auth/realms/master
+    oidc_authentication=true
+    oidc.client_id=gitbucket
+    oidc.jws_algorithm=RS256
+    base_url=http\://INGRESS_IP/gitbucket
