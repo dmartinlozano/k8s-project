@@ -2,6 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Software } from './software.interface';
 import { ElectronService } from 'src/app/_helpers/electron.service';
+import { KeycloakService } from 'src/app/services-tools/keycloak.service';
+import { GitbucketService } from 'src/app/services-tools/gitbucket.service';
 
 @Component({
   selector: 'dashboard-software',
@@ -13,8 +15,13 @@ export class SoftwareComponent{
   showSpinner: boolean = false;
   software: Software[];
 
-  constructor(private electronService: ElectronService, private dialogRef: MatDialogRef<SoftwareComponent>, @Inject(MAT_DIALOG_DATA) public data: Software[]) { 
-    this.software = data;
+  constructor(
+    private electronService: ElectronService, 
+    private keycloakService: KeycloakService, 
+    private gitbucketService: GitbucketService,
+    private dialogRef: MatDialogRef<SoftwareComponent>, 
+    @Inject(MAT_DIALOG_DATA) public data: Software[]) { 
+      this.software = data;
   }
 
   close(): void {
@@ -28,8 +35,10 @@ export class SoftwareComponent{
     await this.electronService.installTools(toInstall.join(' '));
     await this.electronService.uninstallTools(toUninstall.join(' '));
 
-    //TODO after install, the new software must be configured.
-    //gitbucket with keycloak: https://github.com/gitbucket/gitbucket/wiki/OpenID-Connect-Settings
+    //TODO remove: if (toInstall.indexOf("gitbucket")){
+      await this.keycloakService.configureGitbucket();
+      await this.gitbucketService.configureKeyCloak();
+    //}
     this.dialogRef.close();
   }
 

@@ -3,9 +3,5 @@ export interface Software {
     "name": string;
     "description": string;
     "installed": boolean;
-    "installation": {
-      "linux": string[],
-      "windows": string[]
-    }
   }
   
