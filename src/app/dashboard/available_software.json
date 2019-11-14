@@ -13,7 +13,7 @@
     "installed": false,
     "recommended": true
 },{
-    "id": "jenkins",
+    "id": "k8s-project-jenkins",
     "name": "Jenkins (CI/CD)",
     "description": "",
     "installed": false,

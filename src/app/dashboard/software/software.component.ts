@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Software } from './software.interface';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 import { GitbucketService } from 'src/app/services/gitbucket.service';
+import { JenkinsService } from 'src/app/services/jenkins.service';
 import { ToolsService } from 'src/app/services/tools.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class SoftwareComponent{
     private toolsService: ToolsService, 
     private keycloakService: KeycloakService, 
     private gitbucketService: GitbucketService,
+    private jenkinsService: JenkinsService,
     private dialogRef: MatDialogRef<SoftwareComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: Software[]) { 
       this.software = data;
@@ -37,6 +39,10 @@ export class SoftwareComponent{
 
     if (toInstall.indexOf("gitbucket")){
       await this.keycloakService.configureGitbucket();
+    }
+    if (toInstall.indexOf("jenkins")){
+      await this.keycloakService.configureJenkins();
+      await this.jenkinsService.configurePermissions();
     }
     this.dialogRef.close();
   }

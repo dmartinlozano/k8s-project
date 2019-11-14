@@ -33,6 +33,49 @@ EOF
     kubectl apply -f ./ingress/gitbucket.yml
     shift
     ;;
+
+    jenkins)
+    echo "Installing jenkins"
+
+cat > /tmp/jenkins_helm_values.yml << EOF
+master:
+  useSecurity: true
+  overwritePlugins: true
+  installPlugins:
+    - git:latest
+    - keycloak:latest
+    - matrix-auth:latest
+  csrf:
+    DefaultCrumbIssuer:
+      Enabled: true
+      ProxyCompatability: true
+  JCasC:
+    enabled: true
+    pluginVersion: "1.32"
+    configScripts:
+      ldap-settings: |
+        jenkins:
+          securityRealm: keycloak
+        unclassified:
+          keycloakSecurityRealm:
+            keycloakJson: |
+              {
+                "realm": "master",
+                "auth-server-url": "http://$INGRESS_IP/auth",
+                "ssl-required": "external",
+                "resource": "jenkins",
+                "credentials": {
+                  "secret": "jenkins"
+                },
+                "confidential-port": 0
+              }
+EOF
+    helm repo update
+    helm install --name k8s-project-jenkins stable/jenkins --namespace k8s-project --set master.jenkinsUriPrefix="/jenkins" --set master.adminUser=root --set master.adminPassword=root -f /tmp/jenkins_helm_values.yml
+    kubectl apply -f ./ingress/jenkins.yml
+    shift
+    ;;
+
     *)
     echo "Ignoring $key"
     shift

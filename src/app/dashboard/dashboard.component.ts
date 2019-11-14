@@ -50,6 +50,9 @@ export class DashboardComponent implements OnInit {
       case 'gitbucket':
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/gitbucket');
         break;
+      case 'k8s-project-jenkins':
+        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/jenkins');
+        break; 
     }
   }
 
