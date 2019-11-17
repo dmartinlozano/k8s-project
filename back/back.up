@@ -1,0 +1,7 @@
+UPDATE authentication
+        SET isEnabled = t,
+            config = '{"authorizationURL":"http://$INGRESS_IP+/auth/realms/master/protocol/openid-connect/auth","clientId":"wiki-js","clientSecret":"wiki-js","host":"$INGRESS_IP","realm":"master","tokenURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/token","userInfoURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/auth"}',
+            selfRegistration = t,
+            domainWhitelist = '{"v":[]}',
+            autoEnrollGroups = '{"v":[2]}'
+        WHERE key=keycloak;
