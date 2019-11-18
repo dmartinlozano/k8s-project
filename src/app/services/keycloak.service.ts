@@ -29,7 +29,7 @@ export class KeycloakService {
     }
 
     async configureGitbucket(){
-        let ingressIp = await this.configService.getConfig("ingressIp");
+        let ingressIp = await this.configService.getConfig("INGRESS_IP");
 
         //check current clientId
         let findClientIdURL = "http://"+ingressIp+"/auth/admin/realms/master/clients?clientId=gitbucket";
@@ -48,7 +48,7 @@ export class KeycloakService {
     }
 
     async configureJenkins(){
-        let ingressIp = await this.configService.getConfig("ingressIp");
+        let ingressIp = await this.configService.getConfig("INGRESS_IP");
 
         //check current clientId
         let findClientIdURL = "http://"+ingressIp+"/auth/admin/realms/master/clients?clientId=jenkins";

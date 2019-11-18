@@ -49,14 +49,6 @@ else
     helm init --service-account tiller --output yaml | sed 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' | sed 's@  replicas: 1@  replicas: 1\n  selector: {"matchLabels": {"app": "helm", "name": "tiller"}}@' | kubectl apply -f -
 fi
 
-#Check root-password
-kubectl get secret k8s-project --namespace k8s-project
-if test `echo $?` -ne 0
-then
-    ROOT_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32)
-    kubectl create secret generic k8s-project --namespace k8s-project --from-literal=root-password=${ROOT_PASSWORD}
-fi
-
 #Install custom ingress
 if test -z "$IS_MINIKUBE";then
     #k8s
@@ -66,28 +58,18 @@ else
     minikube addons enable ingress
 fi
 
-#Prepare repo for keycloak
-helm repo add codecentric https://codecentric.github.io/helm-charts
-kubectl apply -f ./ingress/keycloak.yml
+#store ingressIp
+INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+kubectl create configmap k8s-project-config --namespace k8s-project --from-literal=INGRESS_IP=$INGRESS_IP
 
-KEYCLOAK_INSTALLED=$(helm ls --namespace k8s-project|grep keycloak|wc -l)
+#Install custom postgresql
+POSTGRES_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32)
+helm install --name k8s-project-postgresql --namespace k8s-project --set postgresqlUsername=k8s-project,postgresqlPassword=$POSTGRES_PASSWORD stable/postgresql
+
+KEYCLOAK_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-keycloak|wc -l)
 if test $KEYCLOAK_INSTALLED -eq 0
 then
     exit 3
 fi
 
-#store k8s info
-INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
-
-cat <<EOF > $HOME/.k8s-project/config
-{
-  "ingressIp": "$INGRESS_IP"
-}
-EOF
-
 exit 0
-
-#Install keycloak
-#helm repo add codecentric https://codecentric.github.io/helm-charts
-#helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username=root --set keycloak.password=${ROOT_PASSWORD}
-#kubectl apply -f ./ingress/keycloak.yml

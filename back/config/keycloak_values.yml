@@ -1,0 +1,9 @@
+keycloak:
+  persistence:
+    deployPostgres: false
+    dbVendor: postgres
+    dbName: keycloak
+    dbHost: k8s-project-postgresql.k8s-project
+    dbPort: 5432
+    dbUser: k8s-project
+    dbPassword:

@@ -4,6 +4,7 @@ import { KeycloakService } from '../services/keycloak.service';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { MustMatch } from '../_helpers/must-match.validator';
 import { ToolsService } from '../services/tools.service';
+import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-signup-root',
@@ -15,7 +16,11 @@ export class SignupRootComponent implements OnInit {
   signForm: FormGroup;
   signFormSubmitted = false;
 
-  constructor(private router: Router, private toolsService: ToolsService, private keycloakService: KeycloakService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, 
+              private toolsService: ToolsService, 
+              private keycloakService: KeycloakService, 
+              private loginService: LoginService,
+              private formBuilder: FormBuilder) { }
   get f() { return this.signForm.controls; }
 
   ngOnInit() {
@@ -41,6 +46,7 @@ export class SignupRootComponent implements OnInit {
       this.keycloakService.install(this.signForm.value);
       this.keycloakService.waitUntilToolIsAvailable('keycloak');
       this.keycloakService.fixEmailForAdmin(this.signForm.value);
+      this.loginService.login(this.signForm.value);
       this.router.navigateByUrl('dashboard');
      } catch (err) {
       console.error(err);

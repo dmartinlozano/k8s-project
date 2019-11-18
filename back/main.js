@@ -82,13 +82,12 @@ function execCommand(cmd) {
 
 //Get config
 ipcMain.handle("get-config", async(event, args)=>{
-    return fs.readFileSync(process.env.HOME+'/.k8s-project/config');
+    return await execCommand('kubectl get configMap --namespace k8s-project k8s-project-config -o json');
 });
 
 //install keycloak
 ipcMain.handle('keycloak-install', async (event, credentials) => {
-    console.log("Install keycloak with credentials: " + credentials.username + ", " + credentials.password);
-    return await execCommand('helm install codecentric/keycloak --name keycloak --namespace k8s-project --set keycloak.username="' + credentials.username + '" --set keycloak.password="' + credentials.password + '"');
+    return await execCommand('chmod +x ./back/install_tools.sh && sh -c "./back/install_tools.sh k8s-project-keycloak ' + credentials.username + ' ' + credentials.password + '"');
 });
 
 //get installed tools

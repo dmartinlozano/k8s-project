@@ -16,7 +16,8 @@ export class ConfigService {
         }else{
             this._ipc = window.require('electron').ipcRenderer;
             let configString =  await this._ipc.invoke("get-config");
-            this.config = JSON.parse(configString);
+            let aux = JSON.parse(configString);
+            this.config = aux.data;
             localStorage.setItem("config", JSON.stringify(this.config));
         }
         return this.config[value];

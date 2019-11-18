@@ -2,13 +2,25 @@
 
 echo "Running $0"
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+POSTGRES_PASSWORD=$(kubectl get --namespace k8s-project secrets/k8s-project-postgresql -o jsonpath='{.data.postgresql-password}'|base64 -d)
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
-    gitbucket)
+    k8s-project-keycloak)
+    echo "Installing keycloak"
+    helm repo add codecentric https://codecentric.github.io/helm-charts
+    helm repo update
+    helm install codecentric/keycloak --name k8s-project-keycloak --namespace k8s-project --set keycloak.username=$2 --set keycloak.password=$3 --set keycloak.persistence.dbPassword=$POSTGRES_PASSWORD -f ./back/config/keycloak_values.yml
+    kubectl apply -f ./back/ingress/keycloak.yml
+    shift
+    shift
+    shift
+    ;;
+
+    k8s-project-gitbucket)
     echo "Installing gitbucket"
     helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
     helm repo update
@@ -17,10 +29,10 @@ cat <<-EOF | kubectl apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gitbucket-conf
+  name: k8s-project-config
   namespace: k8s-project
 data:
-  gitbucket.conf: |
+  GITBUCKET_CONF: |
     oidc.client_secret=gitbucket
     oidc.issuer=http\://$INGRESS_IP/auth/realms/master
     oidc_authentication=true
@@ -29,12 +41,12 @@ data:
     base_url=http\://$INGRESS_IP/gitbucket
 EOF
 
-    helm install dmartinlozano/gitbucket --name gitbucket --namespace k8s-project --set image.tag=4.32.0 --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set configFromSecret=true
+    helm install dmartinlozano/gitbucket --name k8s-project-gitbucket --namespace k8s-project --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8s-project
     kubectl apply -f ./ingress/gitbucket.yml
     shift
     ;;
 
-    jenkins)
+    k8s-project-jenkins)
     echo "Installing jenkins"
 
 cat > /tmp/jenkins_helm_values.yml << EOF

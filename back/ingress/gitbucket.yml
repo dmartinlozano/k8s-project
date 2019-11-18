@@ -14,5 +14,5 @@ spec:
       paths:
       - path: /gitbucket/?(.*)
         backend:
-          serviceName: gitbucket
+          serviceName: k8s-project-gitbucket
           servicePort: 80

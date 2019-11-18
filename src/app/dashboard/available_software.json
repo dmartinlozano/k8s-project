@@ -1,12 +1,12 @@
 [{
-    "id": "keycloak",
+    "id": "k8s-project-keycloak",
     "name": "Keycloak (Users)",
     "description": "Manage identity and access management.",
     "installed": false,
     "recommended": true
 },
 {
-    "id": "gitbucket",
+    "id": "k8s-project-gitbucket",
     "name": "GitBucket (Repositories)",
     "description": "System control versions for git",
     "version": "4.32.0",
@@ -19,48 +19,48 @@
     "installed": false,
     "recommended": true
 },{
-    "id": "mkDocs",
-    "name": "mkDocs (Documentation)",
+    "id": "k8s-project-wiki-js",
+    "name": "Wiki.js (Documentation)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "nexus",
+    "id": "k8s-project-nexus",
     "name": "Nexus (Artifacts)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "openproject",
+    "id": "k8s-project-openproject",
     "name": "Open Project (Agile)",
     "description": "",
     "installed": false
 },{
-    "id": "mattermost",
+    "id": "k8s-project-mattermost",
     "name": "Mattermost (Chat)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "testlink",
-    "name": "Testlink (Test)",
+    "id": "k8s-project-sherlock",
+    "name": "Sherlock (Test)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "minio",
+    "id": "k8s-project-minio",
     "name": "Minio (Files)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "iRedMail",
+    "id": "k8s-project-iRedMail",
     "name": "iRedMail (Mail)",
     "description": "",
     "installed": false,
     "recommended": false
 },{
-    "id": "bootsnote",
+    "id": "k8s-project-bootsnote",
     "name": "Bootsnote (Notes)",
     "description": "",
     "installed": false,

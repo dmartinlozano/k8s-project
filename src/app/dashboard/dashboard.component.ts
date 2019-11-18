@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
   async ngOnInit() {
 
     //get installed tools
-    this.ingressIp = await this.configService.getConfig("ingressIp");
+    this.ingressIp = await this.configService.getConfig("INGRESS_IP");
     let it = await this.toolsService.getInstalledTools();
     this.installedToolsNames = it.Releases.map(x => x.Name).filter(x => x !== "k8s-project-ingress");
 
@@ -44,10 +44,10 @@ export class DashboardComponent implements OnInit {
 
   goto(tool:string){
     switch (tool) {
-      case 'keycloak':
+      case 'k8s-project-keycloak':
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/auth/admin');
         break;
-      case 'gitbucket':
+      case 'k8s-project-gitbucket':
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/gitbucket');
         break;
       case 'k8s-project-jenkins':
