@@ -46,7 +46,8 @@ export class SignupRootComponent implements OnInit {
       this.keycloakService.install(this.signForm.value);
       this.keycloakService.waitUntilToolIsAvailable('keycloak');
       this.keycloakService.fixEmailForAdmin(this.signForm.value);
-      this.loginService.login(this.signForm.value);
+      let res = await this.loginService.login(this.signForm.value);
+      localStorage.setItem("keycloak_token_info", JSON.stringify(res));
       this.router.navigateByUrl('dashboard');
      } catch (err) {
       console.error(err);

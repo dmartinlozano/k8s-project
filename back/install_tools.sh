@@ -4,20 +4,14 @@ echo "Running $0"
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
 POSTGRES_PASSWORD=$(kubectl get --namespace k8s-project secrets/k8s-project-postgresql -o jsonpath='{.data.postgresql-password}'|base64 -d)
 
-while [[ $# -gt 0 ]]
-do
-key="$1"
 
-case $key in
+case $1 in
     k8s-project-keycloak)
     echo "Installing keycloak"
     helm repo add codecentric https://codecentric.github.io/helm-charts
     helm repo update
     helm install codecentric/keycloak --name k8s-project-keycloak --namespace k8s-project --set keycloak.username=$2 --set keycloak.password=$3 --set keycloak.persistence.dbPassword=$POSTGRES_PASSWORD -f ./back/config/keycloak_values.yml
     kubectl apply -f ./back/ingress/keycloak.yml
-    shift
-    shift
-    shift
     ;;
 
     k8s-project-gitbucket)
@@ -41,9 +35,8 @@ data:
     base_url=http\://$INGRESS_IP/gitbucket
 EOF
 
-    helm install dmartinlozano/gitbucket --name k8s-project-gitbucket --namespace k8s-project --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8s-project
-    kubectl apply -f ./ingress/gitbucket.yml
-    shift
+    helm install dmartinlozano/gitbucket --name k8s-project-gitbucket --namespace k8s-project --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8sproject -f ./back/config/gitbucket_values.yml
+    kubectl apply -f ./back/ingress/gitbucket.yml
     ;;
 
     k8s-project-jenkins)
@@ -84,14 +77,18 @@ master:
 EOF
     helm repo update
     helm install --name k8s-project-jenkins stable/jenkins --namespace k8s-project --set master.jenkinsUriPrefix="/jenkins" --set master.adminUser=root --set master.adminPassword=root -f /tmp/jenkins_helm_values.yml
-    kubectl apply -f ./ingress/jenkins.yml
-    shift
+    kubectl apply -f ./back/ingress/jenkins.yml
+    ;;
+
+    k8s-project-wiki-js)
+    echo "Installing wiki.js"
+    helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
+    helm repo update
+    helm install dmartinlozano/wiki-js --namespace k8s-project --name k8s-project-wiki-js --set database.password=$POSTGRES_PASSWORD --set fixWizardAndKeycloakSidecar.wikiConfig.adminEmail=admin@example.com --set fixWizardAndKeycloakSidecar.wikiConfig.adminPassword=admin1234 --set fixWizardAndKeycloakSidecar.wikiConfig.siteUrl=http://$INGRESS_IP/wiki-js --set fixWizardAndKeycloakSidecar.keycloak.host=$INGRESS_IP -f ./back/config/wikijs_values.yml
+    kubectl apply -f ./back/ingress/wikijs.yml
     ;;
 
     *)
     echo "Ignoring $key"
-    shift
     ;;
 esac
-done
-

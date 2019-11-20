@@ -34,15 +34,18 @@ export class SoftwareComponent{
     this.showSpinner = true;
     let toInstall = this.software.filter(x=>{return x.installed === true}).map(x=>{return x.id});
     let toUninstall = this.software.filter(x=>{return x.installed === false}).map(x=>{return x.id});
-    await this.toolsService.installTools(toInstall.join(' '));
-    await this.toolsService.uninstallTools(toUninstall.join(' '));
+    await this.toolsService.installTools(toInstall);
+    await this.toolsService.uninstallTools(toUninstall);
 
-    if (toInstall.indexOf("gitbucket")){
+    if (toInstall.indexOf("k8s-project-gitbucket")){
       await this.keycloakService.configureGitbucket();
     }
-    if (toInstall.indexOf("jenkins")){
+    if (toInstall.indexOf("k8s-project-jenkins")){
       await this.keycloakService.configureJenkins();
       await this.jenkinsService.configurePermissions();
+    }
+    if (toInstall.indexOf("k8s-project-wiki-js")){
+      await this.keycloakService.configureWikijs();
     }
     this.dialogRef.close();
   }

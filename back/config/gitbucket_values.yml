@@ -1,7 +1,7 @@
 image:
   tag: 4.32.0
 externalDatabase:
-  url: "jdbc:mysql://k8s-project-postgresql.k8s-project/gitbucket?useUnicode=true&characterEncoding=utf8"
+  url: "jdbc:postgresql://k8s-project-postgresql.k8s-project.svc.cluster.local:5432/gitbucket"
 configFromMap:
   enabled: true
   name: k8s-project-config

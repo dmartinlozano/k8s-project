@@ -20,11 +20,15 @@ export class ToolsService {
     }
 
     async installTools(toolsToInstall):Promise<any>{
-        return await this._ipc.invoke("install-tools", toolsToInstall);
+        await Promise.all(toolsToInstall.map(async (tool) => {
+            await this._ipc.invoke("install-tool", tool);
+        }));
     }
 
     async uninstallTools(toolsToUninstall):Promise<any>{
-        return await this._ipc.invoke("uninstall-tools", toolsToUninstall);
+        await Promise.all(toolsToUninstall.map(async (tool) => {
+            await this._ipc.invoke("uninstall-tool", tool);
+        }));
     }
 
 }

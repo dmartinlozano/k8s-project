@@ -53,6 +53,9 @@ export class DashboardComponent implements OnInit {
       case 'k8s-project-jenkins':
         this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/jenkins');
         break; 
+      case 'k8s-project-wiki-js':
+        this.mainContent.nativeElement.setAttribute('src', 'http://'+this.ingressIp+'/');
+        break; 
     }
   }
 

@@ -40,7 +40,7 @@ export class KeycloakService {
             let body = { "id": "gitbucket",
                 "protocol": "openid-connect",
                 "publicClient": false,
-                "redirectUris": ["http://40.87.141.55/*"],
+                "redirectUris": ["http://"+ingressIp+"/*"],
                 "secret": "gitbucket"
             }
             await this.http.post(postClientIdURL,body).toPromise();
@@ -59,8 +59,27 @@ export class KeycloakService {
             let body = { "id": "jenkins",
                 "protocol": "openid-connect",
                 "publicClient": false,
-                "redirectUris": ["http://40.87.141.55/*"],
+                "redirectUris": ["http://"+ingressIp+"/*"],
                 "secret": "jenkins"
+            }
+            await this.http.post(postClientIdURL,body).toPromise();
+        }
+    }
+
+    async configureWikijs(){
+        let ingressIp = await this.configService.getConfig("INGRESS_IP");
+
+        //check current clientId
+        let findClientIdURL = "http://"+ingressIp+"/auth/admin/realms/master/clients?clientId=wiki-js";
+        let postClientIdURL = "http://"+ingressIp+"/auth/admin/realms/master/clients/";
+        const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+        let exists: any = await this.http.get(findClientIdURL, {headers}).toPromise();
+        if (exists.length === 0){
+            let body = { "id": "wiki-js",
+                "protocol": "openid-connect",
+                "publicClient": false,
+                "redirectUris": ["http://"+ingressIp+"/*"],
+                "secret": "wiki-js"
             }
             await this.http.post(postClientIdURL,body).toPromise();
         }

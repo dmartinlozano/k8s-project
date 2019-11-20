@@ -1,7 +1,12 @@
-UPDATE authentication
-        SET isEnabled = t,
-            config = '{"authorizationURL":"http://$INGRESS_IP+/auth/realms/master/protocol/openid-connect/auth","clientId":"wiki-js","clientSecret":"wiki-js","host":"$INGRESS_IP","realm":"master","tokenURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/token","userInfoURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/auth"}',
-            selfRegistration = t,
-            domainWhitelist = '{"v":[]}',
-            autoEnrollGroups = '{"v":[2]}'
-        WHERE key=keycloak;
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace k8s-project k8s-project-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+kubectl run k8s-project-postgresql-client --rm --tty -i --restart='Never' --namespace k8s-project --image docker.io/bitnami/postgresql:11.6.0-debian-9-r0 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host k8s-project-postgresql -U k8sproject -p 5432
+
+
+kubectl run prueba-wiki --rm --tty -i --restart='Never' --namespace k8s-project --image alpine --command -- sh
+ 
+delete from authentication where key='keycloak';
+insert into authentication("key","isEnabled","config","selfRegistration","domainWhitelist","autoEnrollGroups")
+values ('keycloak','t','{"authorizationURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/auth","clientId":"wiki-js","clientSecret":"wiki-js","host":"$INGRESS_IP","realm":"master","tokenURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/token","userInfoURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/auth"}','t','{"v":[]}','{"v":[2]}');
+ 
+ 
+UPDATE authentication SET isEnabled = 't', config = '{"authorizationURL":"http://$INGRESS_IP+/auth/realms/master/protocol/openid-connect/auth","clientId":"wiki-js","clientSecret":"wiki-js","host":"$INGRESS_IP","realm":"master","tokenURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/token","userInfoURL":"http://$INGRESS_IP/auth/realms/master/protocol/openid-connect/auth"}', selfRegistration = 't', domainWhitelist = '{"v":[]}', autoEnrollGroups = '{"v":[2]}' WHERE key='keycloak';

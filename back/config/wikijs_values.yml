@@ -1,0 +1,15 @@
+database:
+  host: k8s-project-postgresql.k8s-project.svc.cluster.local
+  port: 5432
+  name: wiki
+  user: k8sproject
+
+fixWizardAndKeycloakSidecar:
+  enabled: true
+  wikiConfig:
+    host: k8s-project-wiki-js.k8s-project
+    port: 80
+    telemetry: false
+  keycloak:
+    protocol: http
+    host: keycloak.com

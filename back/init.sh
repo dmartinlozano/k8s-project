@@ -62,13 +62,19 @@ fi
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
 kubectl create configmap k8s-project-config --namespace k8s-project --from-literal=INGRESS_IP=$INGRESS_IP
 
-#Install custom postgresql
-POSTGRES_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32)
-helm install --name k8s-project-postgresql --namespace k8s-project --set postgresqlUsername=k8s-project,postgresqlPassword=$POSTGRES_PASSWORD stable/postgresql
+#Install postgresql
+POSTGRES_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-postgresql|wc -l)
+if test $POSTGRES_INSTALLED -eq 0
+then
+    echo "Installing postgresql"
+    helm install --wait stable/postgresql --name k8s-project-postgresql --namespace k8s-project --set postgresqlUsername=k8sproject --set postgresqlDatabase=k8sproject --set initdbScripts."init\.sql"="CREATE DATABASE keycloak;GRANT ALL PRIVILEGES ON DATABASE keycloak TO k8sproject;CREATE DATABASE gitbucket;GRANT ALL PRIVILEGES ON DATABASE gitbucket TO k8sproject;CREATE DATABASE wiki;GRANT ALL PRIVILEGES ON DATABASE wiki TO k8sproject;"
+    
+fi
 
 KEYCLOAK_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-keycloak|wc -l)
 if test $KEYCLOAK_INSTALLED -eq 0
 then
+    echo "Keycloak is not installed. Signup!"
     exit 3
 fi
 
