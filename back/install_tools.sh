@@ -88,6 +88,14 @@ EOF
     kubectl apply -f ./back/ingress/wikijs.yml
     ;;
 
+    k8s-project-testlink)
+    echo "Installing testlink"
+    helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
+    helm repo update
+    helm install dmartinlozano/testlink --namespace k8s-project --name k8s-project-testlink --set externalDatabase.password=$POSTGRES_PASSWORD -f ./back/config/testlink_values.yml
+    kubectl apply -f ./back/ingress/testlink.yml
+    ;;
+
     *)
     echo "Ignoring $key"
     ;;

@@ -1,0 +1,7 @@
+externalDatabase:
+  host: k8s-project-postgresql.k8s-project.svc.cluster.local
+  port: 5432
+  name: testlink
+  user: k8sproject
+
+basePath: /testlink

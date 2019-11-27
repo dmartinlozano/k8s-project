@@ -42,8 +42,8 @@
     "installed": false,
     "recommended": false
 },{
-    "id": "k8s-project-sherlock",
-    "name": "Sherlock (Test)",
+    "id": "k8s-project-testlink",
+    "name": "Testlink (Test)",
     "description": "",
     "installed": false,
     "recommended": false
