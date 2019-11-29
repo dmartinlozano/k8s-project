@@ -1,27 +1,56 @@
 # K8sProject
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
+K8sProject is a collaborative tool for managing software projects, providing to development teams an unique work environment with all the necessary tools for their work.
 
-## Development server
+He included tools are necessary for development work, not to deploy.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+What K8sProject provide insted downloading these tools? In addition to an integrated develop environment, your will get all these tools configured and prepared to work with each other.
 
-## Code scaffolding
+Tools included:
+- **Keycloak**. The users of all applications will be centralized in this tool.
+- **GitBucket**. System control versions for git.
+- **Jenkins**. CI/CD of projects. 
+- **Wiki-js**. Collaborative documentation.
+- **Nexus**. Storage of generated artifacts (js, jar, war...)
+- **SonarQube**. Quality scanning tool.
+- **Open Project**. Boards and issue for projects.
+- **Mattermost**. Chat for the team.
+- **Testlink**. Test manager.
+- **Minio**. Storage of files.
+- **RoundCube**. Email client.
+- **Bootsnote**. Notes.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+If do you need an environment for developers with a Continous Development tool integrated in git repository, linked with several tools, this is your framework work.
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Pre-conditions
 
-## Running unit tests
+K8sProject need a Kubernetes to be used. It can be an empty installation of k8s or an installation of k8s with already deployed software. K8sProject is not invasive with previous installations.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- The file `$HOME/.kube.config` must be exists.
+- The state of k8s cluste must be running. Note: We use `kubectl cluster-info`.
 
-## Running end-to-end tests
+## Testing it in local
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+If you want test K8sProject in your laptop, you can use Microk8s. [Doc](https://microk8s.io/docs/). 
 
-## Further help
+This script: `sudo ./microk8s-setupsh` prepare your laptop befor execute K8sProject.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Docker.
+If you already have installed docker, you need add the following lines to `/etc/docker/daemon.json`: 
+```
+{
+    "insecure-registries" : ["localhost:32000"] 
+}
+```
+and then restart docker with: `sudo systemctl restart docker`
+
+### Dashboard
+If you need access the dashboard of microk8s, [check here](https://microk8s.io/docs/addon-dashboard).
+
+### Ingress
+If you have this problem in microk8s.ingress: `dial tcp: lookup xxx on 10.255.255.1:53: no such host` , edit `/etc/hosts` and add `XXX 127.0.0.1`
+
+
+## Roadmap
+- Windows installation.

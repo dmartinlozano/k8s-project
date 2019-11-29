@@ -6,7 +6,7 @@ test ! -d "$HOME/.k8s-project/tools" && mkdir -p "$HOME/.k8s-project/tools"
 
 #Check if helm tool exists
 if test ! -f "$HOME/.k8s-project/tools/helm"; then
-    curl -o $HOME/.k8s-project/tools/helm.tar.gz "https://get.helm.sh/helm-v2.14.2-linux-amd64.tar.gz"
+    curl -o $HOME/.k8s-project/tools/helm.tar.gz "https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz"
     cd $HOME/.k8s-project/tools
     tar zxf helm.tar.gz --strip-components=1 linux-amd64/helm
     rm -rf *.tar.gz
@@ -39,24 +39,10 @@ kubectl --namespace kube-system create sa tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 
 #Install helm
-IS_MINIKUBE=$(kubectl config view -o jsonpath='{.users[?(@.name == "minikube")].name}')
-
-if test -z "$IS_MINIKUBE";then
-    #k8s
-    helm init --upgrade --wait --service-account tiller
-else
-    #minikube
-    helm init --service-account tiller --output yaml | sed 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' | sed 's@  replicas: 1@  replicas: 1\n  selector: {"matchLabels": {"app": "helm", "name": "tiller"}}@' | kubectl apply -f -
-fi
+helm init tiller --output yaml | sed 's@apiVersion: extensions/v1beta1@apiVersion: apps/v1@' | sed 's@  replicas: 1@  replicas: 1\n  selector: {"matchLabels": {"app": "helm", "name": "tiller"}}@' | kubectl apply -f -
 
 #Install custom ingress
-if test -z "$IS_MINIKUBE";then
-    #k8s
-    helm install --name k8s-project-ingress stable/nginx-ingress --namespace k8s-project --set controller.ingressClass="k8s-project-ingress"
-else
-    #minikube
-    minikube addons enable ingress
-fi
+helm install k8s-project-ingress stable/nginx-ingress --namespace k8s-project --set controller.ingressClass="k8s-project-ingress"
 
 #store ingressIp
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
@@ -67,7 +53,7 @@ POSTGRES_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-postgresql
 if test $POSTGRES_INSTALLED -eq 0
 then
     echo "Installing postgresql"
-    helm install --wait stable/postgresql --name k8s-project-postgresql --namespace k8s-project --set postgresqlUsername=k8sproject --set postgresqlDatabase=k8sproject --set initdbScripts."init\.sql"="CREATE DATABASE keycloak;GRANT ALL PRIVILEGES ON DATABASE keycloak TO k8sproject;CREATE DATABASE gitbucket;GRANT ALL PRIVILEGES ON DATABASE gitbucket TO k8sproject;CREATE DATABASE wiki;GRANT ALL PRIVILEGES ON DATABASE wiki TO k8sproject;"
+    helm install --wait stable/postgresql k8s-project-postgresql --namespace k8s-project --set postgresqlUsername=k8sproject --set postgresqlDatabase=k8sproject --set initdbScripts."init\.sql"="CREATE DATABASE keycloak;GRANT ALL PRIVILEGES ON DATABASE keycloak TO k8sproject;CREATE DATABASE gitbucket;GRANT ALL PRIVILEGES ON DATABASE gitbucket TO k8sproject;CREATE DATABASE wiki;GRANT ALL PRIVILEGES ON DATABASE wiki TO k8sproject;"
     
 fi
 
