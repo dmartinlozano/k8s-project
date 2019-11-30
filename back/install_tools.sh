@@ -11,8 +11,8 @@ case $1 in
     echo "Installing keycloak"
     helm repo add codecentric https://codecentric.github.io/helm-charts
     helm repo update
-    helm install k8s-project-keycloak codecentric/keycloak --namespace k8s-project --set keycloak.username=$2 --set keycloak.password=$3 --set keycloak.persistence.dbPassword=$POSTGRES_PASSWORD -f ./config/keycloak_values.yml
-    kubectl apply -f ./ingress/keycloak.yml
+    helm install k8s-project-keycloak codecentric/keycloak --namespace k8s-project --set keycloak.username=$2 --set keycloak.password=$3 --set keycloak.persistence.dbPassword=$POSTGRES_PASSWORD -f ./back/config/keycloak_values.yml
+    kubectl apply -f ./back/ingress/keycloak.yml
     ;;
 
     k8s-project-gitbucket)
@@ -36,8 +36,8 @@ data:
     base_url=http\://$INGRESS_IP/gitbucket
 EOF
 
-    helm install k8s-project-gitbucket dmartinlozano/gitbucket --namespace k8s-project --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8sproject -f ./config/gitbucket_values.yml
-    kubectl apply -f ./ingress/gitbucket.yml
+    helm install k8s-project-gitbucket dmartinlozano/gitbucket --namespace k8s-project --set gitbucket.base_url="http://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8sproject -f ./back/config/gitbucket_values.yml
+    kubectl apply -f ./back/ingress/gitbucket.yml
     ;;
 
     k8s-project-jenkins)
@@ -78,23 +78,23 @@ master:
 EOF
     helm repo update
     helm install k8s-project-jenkins stable/jenkins --namespace k8s-project --set master.jenkinsUriPrefix="/jenkins" --set master.adminUser=root --set master.adminPassword=root -f /tmp/jenkins_helm_values.yml
-    kubectl apply -f ./ingress/jenkins.yml
+    kubectl apply -f ./back/ingress/jenkins.yml
     ;;
 
     k8s-project-wiki-js)
     echo "Installing wiki.js"
     helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
     helm repo update
-    helm install k8s-project-wiki-js dmartinlozano/wiki-js --namespace k8s-project --set database.password=$POSTGRES_PASSWORD --set fixWizardAndKeycloakSidecar.wikiConfig.adminEmail=admin@example.com --set fixWizardAndKeycloakSidecar.wikiConfig.adminPassword=admin1234 --set fixWizardAndKeycloakSidecar.wikiConfig.siteUrl=http://$INGRESS_IP/wiki-js --set fixWizardAndKeycloakSidecar.keycloak.host=$INGRESS_IP -f ./config/wikijs_values.yml
-    kubectl apply -f ./ingress/wikijs.yml
+    helm install k8s-project-wiki-js dmartinlozano/wiki-js --namespace k8s-project --set database.password=$POSTGRES_PASSWORD --set fixWizardAndKeycloakSidecar.wikiConfig.adminEmail=admin@example.com --set fixWizardAndKeycloakSidecar.wikiConfig.adminPassword=admin1234 --set fixWizardAndKeycloakSidecar.wikiConfig.siteUrl=http://$INGRESS_IP/wiki-js --set fixWizardAndKeycloakSidecar.keycloak.host=$INGRESS_IP -f ./back/config/wikijs_values.yml
+    kubectl apply -f ./back/ingress/wikijs.yml
     ;;
 
     k8s-project-testlink)
     echo "Installing testlink"
     helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
     helm repo update
-    helm install k8s-project-testlink dmartinlozano/testlink  --namespace k8s-project --set externalDatabase.password=$POSTGRES_PASSWORD -f ./config/testlink_values.yml
-    kubectl apply -f ./ingress/testlink.yml
+    helm install k8s-project-testlink dmartinlozano/testlink  --namespace k8s-project --set externalDatabase.password=$POSTGRES_PASSWORD -f ./back/config/testlink_values.yml
+    kubectl apply -f ./back/ingress/testlink.yml
     ;;
 
     *)

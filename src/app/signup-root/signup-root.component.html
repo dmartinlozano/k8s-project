@@ -25,10 +25,10 @@
                     <mat-error *ngIf="f.verifyPassword.errors.mustMatch">Passwords must match</mat-error>
                 </div>
              </mat-form-field>
-                <!--<mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>-->
+             <mat-card-actions>
+                <button mat-raised-button color="primary" type="submit"  [disabled]="showSpinner">OK</button>
+            </mat-card-actions>
         </mat-card-content>
-        <mat-card-actions>
-            <button mat-raised-button color="primary" type="submit">OK</button>
-        </mat-card-actions>
+        <mat-progress-bar mode="indeterminate" [style.display]="showSpinner ? 'block' : 'none'"></mat-progress-bar>
     </form>
 </mat-card>

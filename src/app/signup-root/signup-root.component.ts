@@ -15,6 +15,7 @@ export class SignupRootComponent implements OnInit {
 
   signForm: FormGroup;
   signFormSubmitted = false;
+  showSpinner = false;
 
   constructor(private router: Router, 
               private toolsService: ToolsService, 
@@ -43,8 +44,10 @@ export class SignupRootComponent implements OnInit {
       return;
     }
     try{
+      this.showSpinner = true;
       this.keycloakService.install(this.signForm.value);
-      this.keycloakService.waitUntilToolIsAvailable('keycloak');
+      await this.toolsService.waitUntilToolsIsAvailable('auth');
+      this.showSpinner = true;
       this.keycloakService.fixEmailForAdmin(this.signForm.value);
       let res = await this.loginService.login(this.signForm.value);
       localStorage.setItem("keycloak_token_info", JSON.stringify(res));

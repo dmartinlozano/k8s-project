@@ -46,6 +46,7 @@ helm install k8s-project-ingress stable/nginx-ingress --namespace k8s-project --
 
 #store ingressIp
 INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+kubectl delete --namespace k8s-project configmap k8s-project-config
 kubectl create configmap k8s-project-config --namespace k8s-project --from-literal=INGRESS_IP=$INGRESS_IP
 
 #Install postgresql
