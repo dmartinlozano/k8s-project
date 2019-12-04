@@ -4,5 +4,6 @@ export interface Software {
     "description": string;
     "version": string;
     "installed": boolean;
+    "path": string;
   }
   

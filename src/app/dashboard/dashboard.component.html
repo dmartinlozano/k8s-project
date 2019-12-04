@@ -1,11 +1,11 @@
 <mat-sidenav-container fullscreen>
     <mat-sidenav mode="side" #sidenav opened position="start">
         <mat-nav-list *ngFor="let item of availableSoftware">
-            <a mat-list-item (click)="goto(item.id)" *ngIf="item.installed === true">{{item.name}}</a>
+            <a mat-list-item (click)="goto(item.id)" [style.display]="item.installed ? 'block' : 'none'">{{item.name}}</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <mat-toolbar color="primary">
+        <mat-toolbar color="primary"> 
             <button mat-icon-button aria-label="Example icon-button with a heart icon" style="color: white" (click)="sidenav.toggle()">
                 <i class="fas fa-bars"></i>&nbsp;
             </button>

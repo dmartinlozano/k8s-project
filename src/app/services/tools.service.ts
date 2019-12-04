@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IpcRenderer } from 'electron';
 import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { delay, retryWhen,  concatMap, catchError } from "rxjs/operators"; 
+import { delay, retryWhen,  concatMap, catchError, take } from "rxjs/operators"; 
 import { throwError, of } from 'rxjs';
 
 
@@ -44,6 +44,7 @@ export class ToolsService {
             retryWhen(errors => errors.pipe(
                 concatMap(error => error.status === 200 ? throwError(200): of(error).pipe(delay(5000)))
             )),
+            take(120),
             catchError(error => error === 200 ? of ('OK'): throwError(error))
         ).toPromise();
     }

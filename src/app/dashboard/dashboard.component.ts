@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
     //get installed tools
     this.ingressIp = await this.configService.getConfig("INGRESS_IP");
     let it = await this.toolsService.getInstalledTools();
-    this.installedToolsNames = it.Releases.map(x => x.Name).filter(x => x !== "k8s-project-ingress");
+    this.installedToolsNames = it.map(x => x.name).filter(x => x !== "k8s-project-ingress"  && x != "k8s-project-postgresql");
 
     //print installed tools in left menu:
     this.availableSoftware = availableSoftwareJson.map(x => {
