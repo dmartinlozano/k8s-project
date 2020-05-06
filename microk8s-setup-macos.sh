@@ -1,22 +1,45 @@
 #!/bin/bash
 
-set -x
+#previous mac tools
+IPROUTE2MAC=$(brew list|grep iproute2mac|wc -l)
+KUBECTL=$(brew list|grep kubernetes-cli|wc -l)
+
+if test `echo $KUBECTL` -eq 0; then
+    brew install kubernetes-cli
+fi
+
+if test `echo $IPROUTE2MAC` -eq 0; then
+    brew install iproute2mac
+fi
+
+#configure microk8s-vm with multipass
+
+mkdir -p $HOME/.kube/
 
 multipass launch --name microk8s-vm --mem 4G --disk 40G
 
 multipass exec microk8s-vm -- sudo snap install microk8s --classic --channel=1.18/stable
 multipass exec microk8s-vm -- sudo iptables -P FORWARD ACCEPT
-#multipass exec microk8s-vm -- mkdir -p /home/ubuntu/.kube/
-#multipass exec microk8s-vm -- sudo chmod 777 /home/ubuntu/.kube/
-#multipass exec microk8s-vm -- touch /home/ubuntu/.kube/config
-#multipass exec microk8s-vm -- sudo microk8s.kubectl config view --raw > /home/ubuntu/.kube/config
-multipass exec microk8s-vm -- sudo microk8s.enable helm3 dns storage dashboard registry
-multipass exec microk8s-vm -- microk8s.status --wait-ready
 
-multipass exec microk8s-vm -- sudo microk8s kubectl -n kube-system describe secret $(multipass exec microk8s-vm -- sudo microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
-multipass exec microk8s-vm -- sudo microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &> /dev/null &
+multipass exec microk8s-vm -- sudo /snap/bin/microk8s.config > $HOME/.kube/config
+
+#metallb
+IP_ADDR="$(ip route get 8.8.8.8 |awk '{print $7}')"
+REG=$(echo $IP_ADDR|cut -d "." -f1-3)
+echo $REG.50-$REG.100|multipass exec microk8s-vm -- sudo microk8s.enable metallb
+multipass exec microk8s-vm -- sudo microk8s.status --wait-ready
+
+multipass exec microk8s-vm -- sudo microk8s.enable helm3 dns storage registry dashboard ingress
+multipass exec microk8s-vm -- sudo microk8s.status --wait-ready
+
+echo 
+echo "k8s installed ok with microk8s"
+echo
+echo "To view the token: kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)"
+echo "To open dashboard: kubectl proxy --accept-hosts=.* --address=0.0.0.0"
+echo
 IP=$(multipass info microk8s-vm | grep IPv4 | awk '{ print $2 }')
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors https://$IP:10443 &> /dev/null &
+echo "Dashboard url: http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login"
 
 #multipass stop microk8s-vm
 #multipass delete microk8s-vm

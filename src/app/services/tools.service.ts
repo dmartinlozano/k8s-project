@@ -39,7 +39,7 @@ export class ToolsService {
     async waitUntilToolsIsAvailable(path: string): Promise<any>{
         let ingressIp = await this.configService.getConfig("INGRESS_IP");
         let url = "http://"+ingressIp+"/"+path;
-        const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+        const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8').set('rejectUnauthorized', 'false')
         return this.http.get(url, {headers}).pipe(
             retryWhen(errors => errors.pipe(
                 concatMap(error => error.status === 200 ? throwError(200): of(error).pipe(delay(5000)))

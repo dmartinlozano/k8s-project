@@ -50,6 +50,11 @@ async function openLoadingWindow() {
                 console.log("Keycloak is not installed");
                 openMainWindow(true);
             }
+            if (err.code === 4) {
+                console.log("O.S. not supported");
+                app.quit();
+                return;
+            }
         }
     });
 }
