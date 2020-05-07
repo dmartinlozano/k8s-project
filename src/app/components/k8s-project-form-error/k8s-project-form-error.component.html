@@ -1,0 +1,19 @@
+<div *ngIf="form.controls[field].errors">
+  <div *ngFor="let error of form.controls[field].errors| keyvalue">
+      <ion-item lines="none" class="error" *ngIf="error.key === 'required' && viewErrors">
+          * {{field}} - required
+      </ion-item>
+      <ion-item lines="none" class="error" *ngIf="error.key === 'email'">
+          * {{field}} - invalid email format
+      </ion-item>
+      <ion-item lines="none" class="error" *ngIf="error.key === 'minlength'">
+          * {{field}} - minimum {{error.value.requiredLength}} characters
+      </ion-item>
+      <ion-item lines="none" class="error" *ngIf="error.key === 'maxlength'">
+          * {{field}} - maximum {{error.value.requiredLength}} characters
+      </ion-item>
+      <ion-item lines="none" class="error" *ngIf="error.key === 'pattern'">
+          * {{field}} - invalid format
+      </ion-item>
+  </div>
+</div>

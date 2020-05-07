@@ -1,0 +1,90 @@
+[{
+    "id": "k8s-project-keycloak",
+    "name": "Keycloak (Users)",
+    "description": "Manage identity and access management.",
+    "path": "auth/admin",
+    "recommended": true,
+    "installed": false,
+    "showLoading": true
+},
+{
+    "id": "k8s-project-gitbucket",
+    "name": "GitBucket (Repositories)",
+    "description": "System control versions for git",
+    "version": "4.32.0",
+    "path": "gitbucket",
+    "recommended": true,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-jenkins",
+    "name": "Jenkins (CI/CD)",
+    "description": "",
+    "path": "jenkins",
+    "recommended": true,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-wiki-js",
+    "name": "Wiki.js (Documentation)",
+    "description": "",
+    "path": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-nexus",
+    "name": "Nexus (Artifacts)",
+    "description": "",
+    "path": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-openproject",
+    "name": "Open Project (Agile)",
+    "path": "",
+    "description": "",
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-mattermost",
+    "name": "Mattermost (Chat)",
+    "path": "",
+    "description": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-testlink",
+    "name": "Testlink (Test)",
+    "path": "testlink",
+    "description": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-minio",
+    "name": "Minio (Files)",
+    "path": "",
+    "description": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-roundcube",
+    "name": "RoundCube (Mail)",
+    "path": "",
+    "description": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+},{
+    "id": "k8s-project-bootsnote",
+    "name": "Bootsnote (Notes)",
+    "path": "",
+    "description": "",
+    "recommended": false,
+    "installed": false,
+    "showLoading": true
+}]

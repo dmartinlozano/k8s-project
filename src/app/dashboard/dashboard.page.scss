@@ -1,0 +1,24 @@
+ion-menu{
+    width: 100px;
+}
+
+ion-item{
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+ion-item:hover{
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.item-disabled{
+    cursor: default;
+    pointer-events: none;
+}
+
+webview{
+    height: 100%;
+}
+
+

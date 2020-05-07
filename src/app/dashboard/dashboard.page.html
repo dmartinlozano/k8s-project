@@ -1,0 +1,15 @@
+<ion-split-pane contentId="main" when="sm">
+  <ion-menu side="start"  contentId="main" swipeGesture="false">
+    <ion-content>
+      <ion-list>
+        <ion-item *ngFor="let tool of availableSoftware" [disabled]="!tool.installed" (click)="openTool(tool)">
+          <ion-spinner *ngIf="tool.showLoading"></ion-spinner>&nbsp;&nbsp;
+          <ion-label>{{tool.name}}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main">
+    <webview #mainContent src="./assets/welcome.html"></webview>
+  </ion-router-outlet>
+</ion-split-pane>

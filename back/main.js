@@ -1,7 +1,8 @@
 const { app, dialog, BrowserWindow, ipcMain } = require("electron");
 const exec = require('child_process').exec;
-const fs = require('fs');
 var main, loading;
+
+app.allowRendererProcessReuse = false;
 
 function openMainWindow(installKeyCloak) {
     main = new BrowserWindow({
@@ -11,7 +12,7 @@ function openMainWindow(installKeyCloak) {
         webPreferences: { nodeIntegration: true, webviewTag: true, webSecurity: true, additionalArguments: ["--installKeyCloak=" + installKeyCloak] }
         //icon: `file://${_dirname}/dist/assets/logo.png`
     });
-    main.loadURL("file://" + __dirname + "/../dist/index.html");
+    main.loadURL("file://" + __dirname + "/../www/index.html");
     main.webContents.openDevTools()
     main.setMenuBarVisibility(false);
     main.maximize();
@@ -24,18 +25,17 @@ function openMainWindow(installKeyCloak) {
     }
 }
 
-
 async function openLoadingWindow() {
     loading = new BrowserWindow({ show: false, frame: false, width: 480, height: 270, resizable: false });
-    loading.loadURL("file://" + __dirname + "/../dist/assets/loading.gif");
+    loading.loadURL("file://" + __dirname + "/../www/assets/loading.gif");
     loading.show();
     exec('chmod +x ./back/init.sh && sh -c "./back/init.sh"', (err, stdout, stderr) => {
         console.error("Stdout to init:" + stdout);
         console.error("Stderr to init:" + stderr);
-        console.error("Error: " + err);
         if (err === null) {
             openMainWindow(false);
         } else {
+            console.error("Error: " + err);
             if (err.code === 1) {
                 dialog.showErrorBox("Error", "The file .kube/config not found in home directory");
                 app.quit();
@@ -59,9 +59,6 @@ async function openLoadingWindow() {
     });
 }
 
-
-app.on("ready", openLoadingWindow);
-
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
     // On macOS specific close process
@@ -70,8 +67,12 @@ app.on("window-all-closed", function () {
     }
 });
 
-app.on("activate", function () {
-    if (win === null) {
+app.whenReady().then(openLoadingWindow)
+
+app.on('activate', () => {
+    // En macOS es común volver a crear una ventana en la aplicación cuando el
+    // icono del dock es clicado y no hay otras ventanas abiertas.
+    if (BrowserWindow.getAllWindows().length === 0) {
         openLoadingWindow();
     }
 });
