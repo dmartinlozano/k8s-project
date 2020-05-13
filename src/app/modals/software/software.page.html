@@ -1,0 +1,36 @@
+<ion-content fullscreen>
+    <ion-header>
+        <ion-toolbar class="ion-text-center">
+          <ion-title size="large">Software management</ion-title>
+        </ion-toolbar>
+      </ion-header>
+    <ion-card mode="ios">
+        <ion-card-content>
+            <ion-list *ngFor="let tool of tools">
+                <ion-item *ngIf="tool.recommended === true">
+                    <ion-toggle mode="md" [(ngModel)]="tool.installed" [disabled]="tool.id === 'k8s-project-keycloak'"></ion-toggle>
+                    &nbsp;&nbsp;
+                  <ion-label>{{tool.name}}</ion-label>
+                </ion-item>
+              </ion-list>
+        </ion-card-content>
+        <ion-card-header>
+            <ion-card-subtitle>Optional</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-list *ngFor="let tool of tools">
+                <ion-item *ngIf="tool.recommended === false">
+                    <ion-toggle mode="md" [(ngModel)]="tool.installed" [disabled]="tool.id === 'k8s-project-keycloak'"></ion-toggle>
+                    &nbsp;&nbsp;
+                  <ion-label>{{tool.name}}</ion-label>
+                </ion-item>
+              </ion-list>
+        </ion-card-content>
+    </ion-card>
+    <ion-footer>
+        <ion-toolbar  class="d-flex ion-justify-content-end" style="margin-right: 15px; margin-bottom: 15px;">
+            <ion-button size="default" (click)="cancel()" color="danger">Cancel</ion-button>
+            <ion-button size="default" (click)="accept()">OK</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+</ion-content>

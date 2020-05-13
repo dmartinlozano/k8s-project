@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { IpcRenderer } from 'electron';
 import { ToastController, LoadingController } from '@ionic/angular';
+import { Service } from '../common/class/service';
 
 declare var electron : any;
 
 @Injectable({
     providedIn: 'root'
 })
-export class GlobalService {
+export class GlobalService extends Service{
 
     private loading: HTMLIonLoadingElement;
     private config: any;
-    private ipc: IpcRenderer | undefined;
 
     constructor(
         private toastController: ToastController,
         private loadingController: LoadingController
     ) { 
-        this.ipc = electron.ipcRenderer;
+        super();
     }
 
     async getConfig(value: string) {
@@ -53,5 +53,9 @@ export class GlobalService {
             });
             this.loading = null;
         }
+    }
+
+    async enableMenu(){
+        this.ipc.invoke("enable-menu");
     }
 }

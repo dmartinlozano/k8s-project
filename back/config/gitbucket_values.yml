@@ -1,5 +1,5 @@
 image:
-  tag: 4.32.0
+  tag: 4.33.0
 externalDatabase:
   url: "jdbc:postgresql://k8s-project-postgresql.k8s-project.svc.cluster.local:5432/gitbucket"
 configFromMap:

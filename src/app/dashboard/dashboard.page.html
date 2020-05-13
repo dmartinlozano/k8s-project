@@ -2,7 +2,7 @@
   <ion-menu side="start"  contentId="main" swipeGesture="false">
     <ion-content>
       <ion-list>
-        <ion-item *ngFor="let tool of availableSoftware" [disabled]="!tool.installed" (click)="openTool(tool)">
+        <ion-item *ngFor="let tool of tools" [disabled]="!tool.installed" (click)="openTool(tool)">
           <ion-spinner *ngIf="tool.showLoading"></ion-spinner>&nbsp;&nbsp;
           <ion-label>{{tool.name}}</ion-label>
         </ion-item>

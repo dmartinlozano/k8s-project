@@ -29,8 +29,10 @@ REG=$(echo $IP_ADDR|cut -d "." -f1-3)
 echo $REG.50-$REG.100|multipass exec microk8s-vm -- sudo microk8s.enable metallb
 multipass exec microk8s-vm -- sudo microk8s.status --wait-ready
 
-multipass exec microk8s-vm -- sudo microk8s.enable helm3 dns storage registry dashboard ingress
+multipass exec microk8s-vm -- sudo microk8s.enable helm3 dns storage registry dashboard
 multipass exec microk8s-vm -- sudo microk8s.status --wait-ready
+
+chmod +x ./back/*.sh
 
 echo 
 echo "k8s installed ok with microk8s"
@@ -40,6 +42,8 @@ echo "To open dashboard: kubectl proxy --accept-hosts=.* --address=0.0.0.0"
 echo
 IP=$(multipass info microk8s-vm | grep IPv4 | awk '{ print $2 }')
 echo "Dashboard url: http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login"
+
+
 
 #multipass stop microk8s-vm
 #multipass delete microk8s-vm

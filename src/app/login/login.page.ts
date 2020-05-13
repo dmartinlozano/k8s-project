@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GlobalService } from '../services/global.service';
-import { LoginService } from '../services/login.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private loginService: LoginService,
+    private userService: UserService,
     private globalService: GlobalService
   ) { }
 
@@ -31,12 +31,13 @@ export class LoginPage implements OnInit {
   async login(){
     if (this.loginForm.valid){
       try {
-        this.globalService.showLoading();
-        let res = await this.loginService.login(this.loginForm.value);
+        await this.globalService.showLoading();
+        let res = await this.userService.login(this.loginForm.value);
         localStorage.setItem("keycloak_token_info", JSON.stringify(res));
         this.router.navigateByUrl('dashboard');
       } catch (error) {
         console.error(error);
+        await this.globalService.dismissLoading();
         this.globalService.showError(error.status + ": " + error.statusText);
       };
     }else{

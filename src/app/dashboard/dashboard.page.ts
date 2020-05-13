@@ -1,17 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import availableSoftware from '../common/available_software.json';
 import { ToolService } from '../services/tool.service';
 import { GlobalService } from '../services/global.service';
-
-class Tool{
-  id : string;
-  name: string;
-  description: string;
-  path: string;
-  recommended: boolean;
-  showLoading: boolean;
-  installed: boolean;
-}
+import { Tool } from '../common/class/tool';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,26 +11,28 @@ class Tool{
 export class DashboardPage implements OnInit {
 
   @ViewChild('mainContent', {static: false}) mainContent: ElementRef;
-  availableSoftware: Tool[] = availableSoftware;
+  tools: Tool[];
   ingressIp: string;
 
   constructor(
     private toolService: ToolService,
     private globalService: GlobalService) {
-    this.globalService.dismissLoading();
+      this.globalService.enableMenu();
+      this.globalService.dismissLoading();
+      this.tools = this.toolService.tools;
   }
 
   ngOnInit() {
     //if left tools is installed, hidde loading and set installed how true
     this.toolService.getInstalledTools().then((tools)=>{
       tools.forEach(tool => {
-        this.availableSoftware.forEach(available=>{
+        this.tools.forEach(available=>{
           if (available.id === tool.name){
             available.installed = true;
           }
         });
       });
-      this.availableSoftware.map((i)=>{i.showLoading = false});
+      this.tools.map((i)=>{i.showLoading = false});
     });
     this.globalService.getConfig("INGRESS_IP").then((ip)=>this.ingressIp = ip);
   }

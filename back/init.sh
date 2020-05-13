@@ -56,18 +56,26 @@ fi
 kubectl create namespace k8s-project
 
 #Install custom ingress if not microk8s
-INGRESS_MICRO_K8S=$(kubectl -n ingress get pods|grep nginx-ingress-microk8s-controller|wc -l)
-if test `echo $INGRESS_MICRO_K8S` -eq 0; then
+MICRO_K8S=$(kubectl get nodes|grep microk8s-vm|wc -l)
+if test `echo $MICRO_K8S` -eq 0; then
+
     helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     helm repo update
     helm install k8s-project-ingress stable/nginx-ingress --namespace k8s-project --set controller.ingressClass="k8s-project-ingress"
     INGRESS_IP=$(kubectl get services --namespace k8s-project|grep k8s-project-ingress-nginx-ingress-controller|awk '{print $4}')
+
 else
     if [[ "$OSTYPE" == "darwin"* ]]; then
         INGRESS_IP=$(multipass info microk8s-vm | grep IPv4 | awk '{ print $2 }') 
     else
         INGRESS_IP=127.0.0.1
     fi
+    kubectl create configmap -n k8s-project k8s-project-nginx-ingress-controller
+    helm install k8s-project-nginx-ingress stable/nginx-ingress --namespace k8s-project --set controller.hostNetwork=true,controller.service.type="",controller.kind=DaemonSet,controller.ingressClass="k8s-project-ingress",controller.dnsPolicy="ClusterFirstWithHostNet",defaultBackend.enabled=false
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tmp.key -out tmp.cert -subj "/CN=${INGRESS_IP}/O=${INGRESS_IP}"
+    kubectl create secret tls k8s-project-ingress-cert --key tmp.key --cert tmp.cert -n k8s-project
+    rm -rf tmp.key tmp.cert
+
     echo "Ingress already installed with microk8s"
 fi
 
@@ -75,12 +83,15 @@ fi
 kubectl delete --namespace k8s-project configmap k8s-project-config
 kubectl create configmap k8s-project-config --namespace k8s-project --from-literal=INGRESS_IP=$INGRESS_IP
 
-#cert-manager for ingress
+#cert-manager for ingress only can be used if not microk8s.
+#microk8s's ingress ip is not accessible from internet, and cert-manager uses 80 port to test the app and generate the certificate.
+
+#if test `echo $MICRO_K8S` -eq 0; then
 #kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.crds.yaml
 #helm repo add jetstack https://charts.jetstack.io
 #helm repo update
 #helm install k8s-project-cert-manager jetstack/cert-manager --namespace k8s-project
-#kubectl apply -f ./cert-manager.yml
+#fi
 
 #Install postgresql
 POSTGRES_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-postgresql|wc -l)

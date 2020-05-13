@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wiki-js
+  namespace: k8s-project
+  annotations:
+    kubernetes.io/ingress.class: k8s-project-ingress
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: k8s-project-wiki-js
+          servicePort: 80

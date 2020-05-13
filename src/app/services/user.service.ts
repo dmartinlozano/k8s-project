@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { GlobalService} from './global.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+declare var electron : any;
+
 @Injectable({
     providedIn: 'root'
 })
-export class LoginService {
+export class UserService {
     
-    constructor(private globalService:GlobalService, private http: HttpClient){}
+    constructor(
+        private globalService:GlobalService, 
+        private http: HttpClient
+    ){}
 
     async login(credentials): Promise<any> {
         let ingressIp = await this.globalService.getConfig("INGRESS_IP");

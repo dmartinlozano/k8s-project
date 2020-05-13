@@ -11,7 +11,6 @@
     "id": "k8s-project-gitbucket",
     "name": "GitBucket (Repositories)",
     "description": "System control versions for git",
-    "version": "4.32.0",
     "path": "gitbucket",
     "recommended": true,
     "installed": false,
@@ -43,47 +42,48 @@
 },{
     "id": "k8s-project-openproject",
     "name": "Open Project (Agile)",
-    "path": "",
     "description": "",
+    "path": "",
+    "recommended": false,
     "installed": false,
     "showLoading": true
 },{
     "id": "k8s-project-mattermost",
     "name": "Mattermost (Chat)",
-    "path": "",
     "description": "",
+    "path": "",
     "recommended": false,
     "installed": false,
     "showLoading": true
 },{
     "id": "k8s-project-testlink",
     "name": "Testlink (Test)",
-    "path": "testlink",
     "description": "",
+    "path": "testlink",
     "recommended": false,
     "installed": false,
     "showLoading": true
 },{
     "id": "k8s-project-minio",
     "name": "Minio (Files)",
-    "path": "",
     "description": "",
+    "path": "",
     "recommended": false,
     "installed": false,
     "showLoading": true
 },{
     "id": "k8s-project-roundcube",
     "name": "RoundCube (Mail)",
-    "path": "",
     "description": "",
+    "path": "",
     "recommended": false,
     "installed": false,
     "showLoading": true
 },{
     "id": "k8s-project-bootsnote",
     "name": "Bootsnote (Notes)",
-    "path": "",
     "description": "",
+    "path": "",
     "recommended": false,
     "installed": false,
     "showLoading": true

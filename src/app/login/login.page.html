@@ -1,15 +1,14 @@
 <ion-content>
   <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
-
     <ion-card>
       <ion-item>
-        <ion-label>Login</ion-label>
+        <h1>Login</h1>
       </ion-item>
       <ion-card-content>
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <ion-grid>
-            <ion-row justify-content-center>
-              <ion-col align-self-center>
+            <ion-row class="ion-justify-content-center">
+              <ion-col class="ion-align-self-center">
                 <ion-item>
                   <ion-input name="name" type="text" placeholder="Username" formControlName="username" required></ion-input>
                 </ion-item>
@@ -22,10 +21,12 @@
                   </ion-input>
                 </ion-item>
                 <k8s-project-form-error [form]="loginForm" [field]="'password'" [view-errors]="viewErrors"></k8s-project-form-error>
-                <ion-item lines="none">
-                  <ion-button type="submit" [disabled]="loginForm.invalid" expand="block">Login
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-justify-content-end">
+              <ion-col size="4" >
+                  <ion-button size="default" type="submit" [disabled]="loginForm.invalid" expand="block">Login
                   </ion-button>
-                </ion-item>
               </ion-col>
             </ion-row>
           </ion-grid>
