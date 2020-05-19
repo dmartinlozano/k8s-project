@@ -22,7 +22,7 @@ case $1 in
 
     k8s-project-gitbucket)
     echo "Installing gitbucket"
-    helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
+    helm repo add dmartinlozano https://dmartinlozano.github.io/k8s-project-docker-tools/
     helm repo update
 
 cat <<-EOF | kubectl apply -f -
@@ -34,14 +34,14 @@ metadata:
 data:
   GITBUCKET_CONF: |
     oidc.client_secret=gitbucket
-    oidc.issuer=http\://$INGRESS_IP/auth/realms/master
+    oidc.issuer=https\://$INGRESS_IP/auth/realms/master
     oidc_authentication=true
     oidc.client_id=gitbucket
     oidc.jws_algorithm=RS256
-    base_url=https\://$INGRESS_IP/gitbucket
 EOF
 
     helm install k8s-project-gitbucket dmartinlozano/gitbucket --namespace k8s-project --set gitbucket.base_url="https://$INGRESS_IP/gitbucket" --set  externalDatabase.password=$POSTGRES_PASSWORD --set externalDatabase.user=k8sproject -f ./back/config/gitbucket_values.yml
+    #wait until pod is installed
     if test `echo $INGRESS_MICRO_K8S` -eq 0; then
       kubectl apply -f ./back/ingress/k8s/gitbucket.yml
     else
@@ -96,7 +96,7 @@ EOF
 
     k8s-project-wiki-js)
     echo "Installing wiki.js"
-    helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
+    helm repo add dmartinlozano https://dmartinlozano.github.io/k8s-project-docker-tools/
     helm repo update
     helm install k8s-project-wiki-js dmartinlozano/wiki-js --namespace k8s-project --set database.password=$POSTGRES_PASSWORD --set fixWizardAndKeycloakSidecar.wikiConfig.adminEmail=admin@example.com --set fixWizardAndKeycloakSidecar.wikiConfig.adminPassword=admin1234 --set fixWizardAndKeycloakSidecar.wikiConfig.siteUrl=http://$INGRESS_IP/wiki-js --set fixWizardAndKeycloakSidecar.keycloak.host=$INGRESS_IP -f ./back/config/wikijs_values.yml
     if test `echo $INGRESS_MICRO_K8S` -eq 0; then
@@ -108,7 +108,7 @@ EOF
 
     k8s-project-testlink)
     echo "Installing testlink"
-    helm repo add dmartinlozano https://dmartinlozano.github.io/helm-charts/
+    helm repo add dmartinlozano https://dmartinlozano.github.io/k8s-project-docker-tools/
     helm repo update
     helm install k8s-project-testlink dmartinlozano/testlink  --namespace k8s-project --set externalDatabase.password=$POSTGRES_PASSWORD -f ./back/config/testlink_values.yml
     if test `echo $INGRESS_MICRO_K8S` -eq 0; then

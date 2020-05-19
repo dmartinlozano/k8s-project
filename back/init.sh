@@ -70,28 +70,33 @@ else
     else
         INGRESS_IP=127.0.0.1
     fi
-    kubectl create configmap -n k8s-project k8s-project-nginx-ingress-controller
-    helm install k8s-project-nginx-ingress stable/nginx-ingress --namespace k8s-project --set controller.hostNetwork=true,controller.service.type="",controller.kind=DaemonSet,controller.ingressClass="k8s-project-ingress",controller.dnsPolicy="ClusterFirstWithHostNet",defaultBackend.enabled=false
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tmp.key -out tmp.cert -subj "/CN=${INGRESS_IP}/O=${INGRESS_IP}"
-    kubectl create secret tls k8s-project-ingress-cert --key tmp.key --cert tmp.cert -n k8s-project
-    rm -rf tmp.key tmp.cert
+fi
 
+#fix nginx-ingress install
+kubectl create configmap -n k8s-project k8s-project-nginx-ingress-controller
+
+#Install nginx-ingress certificate
+INGRESS_CERT=$(kubectl get secret -n k8s-project k8s-project-ingress-cert|wc -l)
+if test `echo $INGRESS_CERT` -eq 0; then
+    openssl req -x509 -nodes -days 358000 -newkey rsa:2048 -keyout tmp.key -out tmp.crt -subj "/CN=K8S-PROJECT/O=dmartinlozano" -extensions san -config <(echo "[req]"; echo distinguished_name=req; echo "[san]"; echo subjectAltName=DNS:${INGRESS_IP})
+    kubectl create secret tls k8s-project-ingress-cert --key tmp.key --cert tmp.crt -n k8s-project
+    rm -rf tmp.key tmp.crt
+    echo "nginx-ingress certificate installed"
+fi
+
+#Install nginx-ingress   
+INGRESS_HELM=$(helm ls -n k8s-project|grep k8s-project-nginx-ingress|wc -l)
+if test `echo $INGRESS_HELM` -eq 0; then
+    helm install k8s-project-nginx-ingress stable/nginx-ingress --namespace k8s-project --set controller.hostNetwork=true,controller.service.type="",controller.kind=DaemonSet,controller.ingressClass="k8s-project-ingress",controller.dnsPolicy="ClusterFirstWithHostNet",defaultBackend.enabled=false,controller.extraArgs.default-ssl-certificate="k8s-project/k8s-project-ingress-cert"
+    echo "Ingress installed"
+else
     echo "Ingress already installed with microk8s"
 fi
 
 #store ingressIp
+
 kubectl delete --namespace k8s-project configmap k8s-project-config
 kubectl create configmap k8s-project-config --namespace k8s-project --from-literal=INGRESS_IP=$INGRESS_IP
-
-#cert-manager for ingress only can be used if not microk8s.
-#microk8s's ingress ip is not accessible from internet, and cert-manager uses 80 port to test the app and generate the certificate.
-
-#if test `echo $MICRO_K8S` -eq 0; then
-#kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.crds.yaml
-#helm repo add jetstack https://charts.jetstack.io
-#helm repo update
-#helm install k8s-project-cert-manager jetstack/cert-manager --namespace k8s-project
-#fi
 
 #Install postgresql
 POSTGRES_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-postgresql|wc -l)
@@ -99,7 +104,7 @@ if test $POSTGRES_INSTALLED -eq 0
 then
     echo "Installing postgresql"
     helm repo add bitnami https://charts.bitnami.com/bitnami
-    helm install --wait k8s-project-postgresql bitnami/postgresql --namespace k8s-project --set postgresqlUsername=k8sproject --set postgresqlDatabase=k8sproject --set initdbScripts."init\.sql"="CREATE DATABASE keycloak;GRANT ALL PRIVILEGES ON DATABASE keycloak TO k8sproject;CREATE DATABASE gitbucket;GRANT ALL PRIVILEGES ON DATABASE gitbucket TO k8sproject;CREATE DATABASE wiki;GRANT ALL PRIVILEGES ON DATABASE wiki TO k8sproject;"
+    helm install --wait k8s-project-postgresql bitnami/postgresql --namespace k8s-project --set postgresqlUsername=k8sproject --set postgresqlDatabase=k8sproject --set initdbScripts."init\.sql"="CREATE DATABASE keycloak;GRANT ALL PRIVILEGES ON DATABASE keycloak TO k8sproject;CREATE DATABASE gitbucket;GRANT ALL PRIVILEGES ON DATABASE gitbucket TO k8sproject;CREATE DATABASE wiki;GRANT ALL PRIVILEGES ON DATABASE wiki TO k8sproject;CREATE DATABASE testlink;GRANT ALL PRIVILEGES ON DATABASE testlink TO k8sproject;"
 fi
 
 KEYCLOAK_INSTALLED=$(helm ls --namespace k8s-project|grep k8s-project-keycloak|wc -l)

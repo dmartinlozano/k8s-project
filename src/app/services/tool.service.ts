@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IpcRenderer } from 'electron';
 import { Tool } from '../common/class/tool';
 import availableSoftware from '../common/available_software.json';
 import { GlobalService } from './global.service';

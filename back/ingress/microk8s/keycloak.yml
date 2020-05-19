@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: k8s-project/k8s-project-ingress-cert
 spec:
   rules:
   - http:
