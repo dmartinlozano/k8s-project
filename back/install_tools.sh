@@ -3,7 +3,7 @@ set -x
 
 echo "Running installtools with parameters $*"
 
-INGRESS_MICRO_K8S=$(kubectl -n ingress get pods|grep nginx-ingress-microk8s-controller|wc -l)
+INGRESS_MICRO_K8S=$(kubectl -n k8s-project get pods|grep nginx-ingress-microk8s-controller|wc -l)
 INGRESS_IP=$(kubectl get configMap --namespace k8s-project k8s-project-config -o jsonpath='{.data.INGRESS_IP}')
 POSTGRES_PASSWORD=$(kubectl get --namespace k8s-project secrets/k8s-project-postgresql -o jsonpath='{.data.postgresql-password}'|base64 -d)
 
@@ -66,7 +66,6 @@ master:
       ProxyCompatability: true
   JCasC:
     enabled: true
-    pluginVersion: "1.32"
     configScripts:
       ldap-settings: |
         jenkins:
